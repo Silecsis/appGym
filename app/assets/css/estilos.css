@@ -1,0 +1,62 @@
+/*----------------------------------header.php-----------------------------------*/
+header{
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+    font-family: 'Big Shoulders Stencil Display', cursive;
+    background-color:#A895C1;
+    border: 1px solid;
+}
+
+header h1{
+    font-size: 40px;
+}
+
+
+/*----------------------------------footer.php-----------------------------------*/
+footer{
+    background-color: #000000;
+    bottom: 0px;
+    position: absolute;
+    width: 100%;
+}
+
+footer p.pie{
+    color: whitesmoke;
+    padding: 10px;
+}
+
+
+
+/*----------------------------------loginView.php-----------------------------------*/
+body.body-login{
+    width: 100%;
+    height: 100%;
+    background: url("../img/fondo.jpg") center center no-repeat fixed; 
+}
+
+li.login{
+    list-style-type:none;
+}
+
+.centrar{
+    width: 90%;
+    height: 100%;
+    max-width: 400px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;  
+    background-color: #A895C1; 
+    border: 3px solid;
+    border-radius: 15%;
+    padding: 25px;
+}
+
+.datos {
+    padding-left: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+/*----------------------------------HomeView.php------------------------------*/
