@@ -55,8 +55,12 @@ class MainController
     */ 
    static function keepSession(){
       if (empty($_SESSION["logueado"]) && isset($_COOKIE["mantenerSesion"])){
-         $_SESSION['logueado']=$_COOKIE["mantenerSesion"];
-         $_SESSION['usuario']=$_COOKIE["mantenerSesion"];
+         $_SESSION['logueado']=true;
+
+         $_SESSION['usuario']= [
+            "login"=>$_COOKIE["mantenerSesion_user"],
+            "rol_id"=>$_COOKIE["mantenerSesion_rol"],//Especificamos el rol porque se necesitará (mas adelante se obtendrá de bd).
+        ];
       }
    }
 }

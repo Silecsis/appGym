@@ -28,7 +28,7 @@ abstract class BaseModel
    public function getAll() {
       $resultSet = null;
       
-      $query = $this->db->query("SELECT * FROM $this->table WHERE deleted_at is null ORDER BY id DESC");
+      $query = $this->db->query("SELECT * FROM $this->table ORDER BY id DESC");
         
       //Devolvemos el resultset en forma de array de objetos
       while ($row = $query->fetchObject()) {

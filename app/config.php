@@ -23,8 +23,8 @@ define('DEFAULT_LOGGED_ACTION', 'index');
 
 define('DBDRIVER', 'mysql');
 define('DBHOST', 'localhost');
-define('DBNAME', 'bdusuarios');
-define('DBUSER', 'admin');
-define('DBPASS', 'admin');
+define('DBNAME', 'appgym');
+define('DBUSER', 'root');
+define('DBPASS', '');
 
 ?>

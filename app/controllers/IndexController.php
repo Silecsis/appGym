@@ -2,6 +2,10 @@
 /**
  * 
  */
+//Para que cargue la clase del modelo:
+ require_once MODELS_FOLDER."UserModel.php";
+
+
 class IndexController extends BaseController{
 
     //Siempre realizar cuando herede para inicializar el constructor padre.
@@ -31,9 +35,7 @@ class IndexController extends BaseController{
      */
     public function login(){
 
-        //Los usuarios que valen.
-        $usuariook = "MJ";
-        $passok = "MJ";
+        //Los usuarios que valen serán de la bd.
 
   
         //Cuando pulsamos el botón enviar.
@@ -42,10 +44,20 @@ class IndexController extends BaseController{
             if((isset($_POST['usuario'])&& isset($_POST['password'])) 
                 && (!empty($_POST['usuario'])&& !empty($_POST['password'])))
             {
-                if ($_POST['usuario'] == $usuariook && $_POST['password'] == $passok) 
+                $userModel=new UserModel();
+
+                $user=$userModel->getByCredentials($_POST['usuario'],$_POST['password']);
+
+                //Si la BBDD indica que el usuario y la contraseña coinciden...
+                if ($user["isValid"]) 
                 {
-                    $_SESSION['logueado']=$_POST['usuario'];
-                    $_SESSION['usuario']= $_POST['usuario'];
+                    $_SESSION['logueado']=true;
+
+                    //Guardamos el nombre del user y el rol del user en la variable de sesión.
+                    $_SESSION['usuario']= [
+                        "login"=>$user["data"]->login,
+                        "rol_id"=>$user["data"]->rol_id,
+                    ];
 
                     //Creamos un par de cookies para recordar el user/pass. Tcaducidad=15días
                     if(isset($_POST['recordar'])&&($_POST['recordar']=="on")) // Si está seleccioniado el checkbox...
@@ -66,13 +78,20 @@ class IndexController extends BaseController{
 
                     // Lógica asociada a mantener la sesión mantenerSesion 
                     if(isset($_POST['mantenerSesion'])&&($_POST['mantenerSesion']=="on")) // Si está seleccionado el checkbox...
-                    { // Creamos una cookie para la sesión 
-                        setcookie ('mantenerSesion' ,$_POST['usuario'],time() + (15 * 24 * 60 * 60)); 
+                    { // Creamos las cookies de la sesion que incluye el nombre de user y su rol.
+//-----------------------MODIFICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR.
+                        //(El rol se borrará de las cookies porque pasará a leerse a bd.)
+                        setcookie ('mantenerSesion' , 'on',time() + (15 * 24 * 60 * 60)); 
+                        setcookie ('mantenerSesion_user' ,  $_SESSION['usuario']["login"],time() + (15 * 24 * 60 * 60));
+                        setcookie ('mantenerSesion_rol' ,  $_SESSION['usuario']["rol_id"],time() + (15 * 24 * 60 * 60));
                     } else {  //Si no está seleccionado el checkbox..
                         // Eliminamos la cookie
                         if(isset($_COOKIE['mantenerSesion'])) 
                         { 
+                            //Limpiamos todas las cookies.
                             setcookie ('mantenerSesion',""); 
+                            setcookie ('mantenerSesion_user',"");
+                            setcookie ('mantenerSesion_rol',"");
                         } 
                     }
                     // Redirigimos a la página de inicio de nuestro sitio  
@@ -97,13 +116,14 @@ class IndexController extends BaseController{
      * @return void
      */
     public function logout(){
-        session_start();
         session_unset();
         session_destroy();
 
         if(isset($_COOKIE['mantenerSesion'])) 
         { 
             setcookie ('mantenerSesion',""); 
+            setcookie ('mantenerSesion_user',"");
+            setcookie ('mantenerSesion_rol',"");
         } 
 
         $this->redirect(DEFAULT_CONTROLLER, DEFAULT_ACTION);
