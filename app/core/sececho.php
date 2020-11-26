@@ -18,4 +18,20 @@
         }
         echo $result;
     }
+
+
+    /**
+     * Si existe el campo del form, se recuerda.
+     *
+     * @param [*] $campo form
+     * @return void
+     */
+    function rememberCamp($campo)
+    {
+        if(isset($_POST["$campo"])){
+            echo "value='{$_POST["$campo"]}'";
+        }
+    }
+
+    
 ?>

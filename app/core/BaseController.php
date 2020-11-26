@@ -36,7 +36,8 @@ abstract class BaseController
 
 
    /**
-    * Undocumented function
+    * Carga la vista indicada si el usuario está logado, sino está logado, redirige al login
+    * y le indica a qué vista quería entrar.
     *
     * @param [type] $name
     * @param array $vars

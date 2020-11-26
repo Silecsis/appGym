@@ -1,4 +1,25 @@
 /*----------------------------------header.php-----------------------------------*/
+/*-------------------Para que el pie quede debajo del contenido----------------------------*/
+html{
+    min-height: 100%;
+    position: relative;
+}
+
+body {
+    margin-bottom: 40px;
+  }
+  
+/*----------------------------------footer.php-----------------------------------*/
+div.footer{
+    background-color: black;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    color: white;
+}
+/*-------------------Para que el pie quede debajo del contenido----------------------------*/
+
 header{
     padding-top: 20px;
     padding-bottom: 20px;
@@ -12,19 +33,28 @@ header h1{
     font-size: 40px;
 }
 
-
-/*----------------------------------footer.php-----------------------------------*/
-footer{
-    background-color: #000000;
-    bottom: 0px;
-    position: absolute;
-    width: 100%;
+/*------NAV BAR------*/
+.navHeader{
+    background-color:#CDC3DA;
 }
 
-footer p.pie{
-    color: whitesmoke;
-    padding: 10px;
+i{
+    color: #7650A6;
+    font-size: 25px;
 }
+
+p.horaIni{
+    color:#331856;
+    font-size: 20px;
+    font-family: 'Castoro', serif;
+    margin-right: 10px;
+    margin-top: 4px;
+}
+
+a.sesion{
+    font-family: 'Castoro', serif;
+}
+/*------FIN NAV BAR------*/
 
 
 
@@ -33,6 +63,7 @@ body.body-login{
     width: 100%;
     height: 100%;
     background: url("../img/fondo.jpg") center center no-repeat fixed; 
+    margin-bottom: 40px;
 }
 
 li.login{
@@ -60,3 +91,20 @@ li.login{
 }
 
 /*----------------------------------HomeView.php------------------------------*/
+h1.home{
+    padding-top: 25px;
+    padding-bottom: 25px;
+    font-family: 'Big Shoulders Stencil Display', cursive;
+}
+
+img.homeim{
+    border: black 1px solid;
+    max-width: 900px;
+    width: 100%;
+    margin-bottom: 40px;;
+}
+
+/*----------------------------------editView.php------------------------------*/
+div.formEdit{
+    margin-bottom: 50px;
+}

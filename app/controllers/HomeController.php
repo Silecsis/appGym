@@ -18,6 +18,17 @@ class HomeController extends BaseController{
     public function index (){
         $this->authView("home","home","index"); //Carga la variable view de la clase View.
     }
+
+    
+
+    /**
+     * Redirige a messagesView.
+     *
+     * @return void
+     */
+    public function messages(){
+        $this->authView("messages","messages","index"); 
+    }
 }
 
 ?>

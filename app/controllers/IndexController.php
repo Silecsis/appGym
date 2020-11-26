@@ -21,7 +21,7 @@ class IndexController extends BaseController{
      */
     public function index (){
         
-        if(isset( $_SESSION['logueado'])){
+        if(isset($_SESSION['logueado'])){
             $this->redirect(DEFAULT_LOGGED_CONTROLLER,DEFAULT_LOGGED_ACTION);
         }else{
             $this->view->show("login"); //Carga la variable view de la clase View.
@@ -34,10 +34,8 @@ class IndexController extends BaseController{
      * @return void
      */
     public function login(){
-
         //Los usuarios que valen serán de la bd.
 
-  
         //Cuando pulsamos el botón enviar.
         if(isset($_POST['submit']))
         { // Comprobamos que recibimos los datos y que no están vacíos
@@ -57,6 +55,8 @@ class IndexController extends BaseController{
                     $_SESSION['usuario']= [
                         "login"=>$user["data"]->login,
                         "rol_id"=>$user["data"]->rol_id,
+                        "nombre"=> $user["data"]->nombre,
+                        "hora_login"=> date('H:i:s')
                     ];
 
                     //Creamos un par de cookies para recordar el user/pass. Tcaducidad=15días
@@ -79,19 +79,23 @@ class IndexController extends BaseController{
                     // Lógica asociada a mantener la sesión mantenerSesion 
                     if(isset($_POST['mantenerSesion'])&&($_POST['mantenerSesion']=="on")) // Si está seleccionado el checkbox...
                     { // Creamos las cookies de la sesion que incluye el nombre de user y su rol.
-//-----------------------MODIFICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR.
+                //-----------------------MODIFICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR.
                         //(El rol se borrará de las cookies porque pasará a leerse a bd.)
                         setcookie ('mantenerSesion' , 'on',time() + (15 * 24 * 60 * 60)); 
-                        setcookie ('mantenerSesion_user' ,  $_SESSION['usuario']["login"],time() + (15 * 24 * 60 * 60));
+                        setcookie ('mantenerSesion_login' ,  $_SESSION['usuario']["login"],time() + (15 * 24 * 60 * 60));
                         setcookie ('mantenerSesion_rol' ,  $_SESSION['usuario']["rol_id"],time() + (15 * 24 * 60 * 60));
+                        setcookie ('mantenerSesion_nombre' ,  $_SESSION['usuario']["nombre"],time() + (15 * 24 * 60 * 60));
+                        setcookie ('mantenerSesion_hora' ,  $_SESSION['usuario']["hora_login"],time() + (15 * 24 * 60 * 60));
                     } else {  //Si no está seleccionado el checkbox..
                         // Eliminamos la cookie
                         if(isset($_COOKIE['mantenerSesion'])) 
                         { 
                             //Limpiamos todas las cookies.
                             setcookie ('mantenerSesion',""); 
-                            setcookie ('mantenerSesion_user',"");
+                            setcookie ('mantenerSesion_login',"");
                             setcookie ('mantenerSesion_rol',"");
+                            setcookie ('mantenerSesion_nombre',"");
+                            setcookie ('mantenerSesion_hora',"");
                         } 
                     }
                     // Redirigimos a la página de inicio de nuestro sitio  
@@ -101,10 +105,16 @@ class IndexController extends BaseController{
                         "userName"=> $_POST['usuario'],
                         "error"=> true
                     ];
-                    
-
                     parent::redirect("index","index",$params);
                 }  
+            }else{
+                $params=[
+                    "userName"=> $_POST['usuario'],
+                    "error"=> true,
+                    "mensaje"=>"vacio"
+                ];
+
+                parent::redirect("index","index",$params);
             }
         }
     }
@@ -122,8 +132,10 @@ class IndexController extends BaseController{
         if(isset($_COOKIE['mantenerSesion'])) 
         { 
             setcookie ('mantenerSesion',""); 
-            setcookie ('mantenerSesion_user',"");
+            setcookie ('mantenerSesion_login',"");
             setcookie ('mantenerSesion_rol',"");
+            setcookie ('mantenerSesion_nombre',"");
+            setcookie ('mantenerSesion_hora',"");
         } 
 
         $this->redirect(DEFAULT_CONTROLLER, DEFAULT_ACTION);

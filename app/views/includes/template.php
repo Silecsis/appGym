@@ -12,8 +12,10 @@ Será la plantilla de las vistas que incluyen el header y footer de include y el
 <body class="<?php echo $viewClass; ?>"> 
     <?php
         require_once ("header.php");
-        require_once ($viewRuta); //Carga la vista que queremos(contenido del body).
-        require_once ("footer.php");//Carga el footer.php
+        require_once ($viewRuta); //Carga la vista que queremos(contenido del body). 
     ?>
 </body>
+<footer>
+    <?php require_once ("footer.php");//Carga el footer.php?>
+</footer>
 </html>

@@ -25,9 +25,11 @@
         </div>
         <div class="text-center">
           <br>
-          <label><input type="button" class="btn btn-secondary recuperarContra" value="Olvidé mi contraseña"></label> 
+          <label><button type="button" class="btn btn-secondary recuperarContra" onclick="location.href='index.php?controller=password&action=forgoted'">Olvidé mi contraseña</button></label> 
           <?php 
-            if (isset($_GET["error"])){
+            if (isset($_GET["mensaje"]) && $_GET["mensaje"]=="vacio"){
+                echo '<div class="alert alert-danger" style="margin-top:5px;"> No puede dejar los campos de usuario y/o contraseña vacíos.<br/> </div>';
+            }else if (isset($_GET["error"])){
               if ($_GET["error"]=="authRequired"){
                  echo '<div class="alert alert-danger" style="margin-top:5px;"> Debes estar logueado para acceder a este sitio.<br/> </div>';
                 }else{
@@ -37,7 +39,8 @@
 
           ?> 
           <br>
-          <input type="submit" value="Enviar" name="submit" class="btn btn-success" />
+          <input type="submit" value="Enviar" name="submit" class="btn btn-primary" />
+          <button type="button" class="btn btn-primary" onclick="location.href='index.php?controller=user&action=registrer'">Registrarme</button>
         </div>
       </form>
     </div>
