@@ -71,16 +71,14 @@ function validate() {
   // Definimos e inicializamos el array de errores y las variables asociadas a cada campo
     $nif="";
     $nombre = "";
-    $apellido1 = "";
-    $apellido2 = "";
-    $imagen = "";
-    $login = "";
+    $apellidos = "";
+    $email = "";
     $password = "";
     $passwordMod="";
-    $email = "";
     $telefono = "";
     $direccion = "";
-    $rol    = "2";//Por defecto el rol siempre es de usuario.
+    $imagen = "";
+    $login = "";
 
 
 
@@ -99,14 +97,9 @@ function validate() {
            $errors["nombre"] = "Nombre no válido. Asegúrate de que no tenga números ni una longitud mayor de 15.";
         } 
 
-        $apellido1=filtrado($_POST["apellido1"]);
-        if (empty($apellido1) || (preg_match("/[0-9]/", $apellido1)) || (strlen($apellido1) > 20)) {
-          $errors["apellido1"] = "Apellido (primero) no válido. Asegúrate de que no tenga números ni una longitud mayor de 20.";
-        }
-
-        $apellido2=filtrado($_POST["apellido2"]);
-        if (empty($apellido2) || (preg_match("/[0-9]/", $apellido2)) || (strlen($apellido2) > 20)) {
-          $errors["apellido2"] = "Apellido (segundo) no válido. Asegúrate de que no tenga números ni una longitud mayor de 20.";
+        $apellidos=filtrado($_POST["apellidos"]);
+        if (empty($apellidos) || (preg_match("/[0-9]/", $apellidos)) || (strlen($apellidos) > 50)) {
+          $errors["apellidos"] = "Apellidos no válidos. Asegúrate de que no tenga números ni una longitud mayor de 50.";
         }
       
         //Si no está logado. Control contras, imagen y login
@@ -115,9 +108,10 @@ function validate() {
               $errors["imagen"] = "Imagen no válida. Vacio";
             }
 
-            $login=filtrado($_POST["login"]);
-            if (empty( $login) || (strlen($login) > 15)) {
-              $errors["login"] = "Login no válido. Asegúrate de que no tenga una longitud mayor de 15. EXISTENCIA";
+            if (!empty($_POST["email"])) {
+              $email=filtrado($_POST["email"]);
+            }else{
+              $errors["email"] = "Email no válido. No puede estar el campo vacío.";
             }
 
             if (empty($_POST["passwordMod"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["passwordMod"]))) {
@@ -139,24 +133,6 @@ function validate() {
               }
             }
         }
-
-
-        
-
-        
-        // //Contra actual.
-        // $password=filtrado($_POST["password"]);
-        // if (empty($_POST["password"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["password"]))) {
-        //   $errors["password"] = "Contraseña no válida.  Asegúrese de que tenga tener una longitud mínima de 8 caracteres y contener letras mayúsculas, minúsculas, números y caracteres especiales.";
-        // } 
-      
-        if (!empty($_POST["email"])) {
-          $password=filtrado($_POST["email"]);
-        }else{
-          $errors["email"] = "Email no válido. No puede estar el campo vacío.";
-        }
-      
-        
 
         //Valida telefono movil español y telefono fijo español
         

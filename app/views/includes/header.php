@@ -40,7 +40,6 @@
                                         }else{
                                             echo "<i class='fas fa-user-tie'></i>";
                                         }
-                                    
                                     ?>
                                 </a>
                             </li>

@@ -53,7 +53,7 @@ class IndexController extends BaseController{
 
                     //Guardamos el nombre del user y el rol del user en la variable de sesión.
                     $_SESSION['usuario']= [
-                        "login"=>$user["data"]->login,
+                        "email"=>$user["data"]->email,
                         "rol_id"=>$user["data"]->rol_id,
                         "id"=>$user["data"]->id,
                         "password"=>$user["data"]->password,
@@ -86,7 +86,7 @@ class IndexController extends BaseController{
                 //-----------------------MODIFICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR.
                         //(El rol se borrará de las cookies porque pasará a leerse a bd.)
                         setcookie ('mantenerSesion' , 'on',time() + (15 * 24 * 60 * 60)); 
-                        setcookie ('mantenerSesion_login' ,  $_SESSION['usuario']["login"],time() + (15 * 24 * 60 * 60));
+                        setcookie ('mantenerSesion_email' ,  $_SESSION['usuario']["email"],time() + (15 * 24 * 60 * 60));
                         setcookie ('mantenerSesion_rol' ,  $_SESSION['usuario']["rol_id"],time() + (15 * 24 * 60 * 60));
                         setcookie ('mantenerSesion_nombre' ,  $_SESSION['usuario']["nombre"],time() + (15 * 24 * 60 * 60));
                         setcookie ('mantenerSesion_img' ,  $_SESSION['usuario']["img"],time() + (15 * 24 * 60 * 60));
@@ -97,7 +97,7 @@ class IndexController extends BaseController{
                         { 
                             //Limpiamos todas las cookies.
                             setcookie ('mantenerSesion',""); 
-                            setcookie ('mantenerSesion_login',"");
+                            setcookie ('mantenerSesion_email',"");
                             setcookie ('mantenerSesion_rol',"");
                             setcookie ('mantenerSesion_img' ,"");
                             setcookie ('mantenerSesion_nombre',"");
@@ -109,7 +109,7 @@ class IndexController extends BaseController{
                 }else{
                     $params=[
                         "userName"=> $_POST['usuario'],
-                        "error"=> "notFound"
+                        "error"=> $user["error"]
                     ];
                     parent::redirect("index","index",$params);
                 }  
@@ -137,7 +137,7 @@ class IndexController extends BaseController{
         if(isset($_COOKIE['mantenerSesion'])) 
         { 
             setcookie ('mantenerSesion',""); 
-            setcookie ('mantenerSesion_login',"");
+            setcookie ('mantenerSesion_email',"");
             setcookie ('mantenerSesion_rol',"");
             setcookie ('mantenerSesion_nombre',"");
             setcookie ('mantenerSesion_hora',"");

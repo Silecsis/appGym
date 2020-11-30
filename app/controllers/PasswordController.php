@@ -43,7 +43,7 @@ class PasswordController extends BaseController{
         if(isset($_POST['submit'])){
 
             $userModel=new UserModel();
-            $user=$userModel->getByLoginAndEmail($_POST["loginUser"],$_POST["emailUser"]);
+            $user=$userModel->getByEmail($_POST["emailUser"]);
 
             if($user["correct"]){
                 // $mail = new PHPMailer(true);
@@ -86,7 +86,7 @@ class PasswordController extends BaseController{
                 //     "error"=>false
                 // ];
                  $passwordNew=uniqid("",true); //Para contra aleatoria.
-                 $changePassword = $userModel -> changePassword($_POST["loginUser"],$passwordNew );  
+                 $changePassword = $userModel -> changePassword($_POST["emailUser"],$passwordNew );  
                 if($changePassword["correct"]){
                     $params=[
                         "password" => $passwordNew

@@ -42,7 +42,9 @@
                 }else if($_GET["error"]=="notFound"){
                   echo '<div class="alert alert-danger" style="margin-top:5px;"> Su nombre de usuario y/o contraseña no se encuentra en nuestra base de datos.<br/> </div>';
                 }else if($_GET["error"]=="empty"){
-                  echo '<div class="alert alert-danger" style="margin-top:5px;"> No puede dejar los campos de usuario y/o contraseña vacíos.<br/> </div>';
+                  echo '<div class="alert alert-danger" style="margin-top:5px;"> No puede dejar los campos de email y/o contraseña vacíos.<br/> </div>';
+                }else if($_GET["error"]=="deactivated"){
+                  echo '<div class="alert alert-danger" style="margin-top:5px;"> Tienes el usuario desactivado. Comunícate con algún administrador..<br/> </div>';
                 }
             }
 

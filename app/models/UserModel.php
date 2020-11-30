@@ -9,16 +9,14 @@ class UserModel extends BaseModel
    private $id;
    private $nif;
    private $nombre;
-   private $apellido1;
-   private $apellido2;
-   private $imagen;
-   private $login;
-   private $password;
+   private $apellidos;
    private $email;
+   private $password;
    private $telefono;
    private $direccion;
+   private $estado;
+   private $imagen;
    private $rol_id;
-
    
    public function __construct()
    {
@@ -44,37 +42,22 @@ class UserModel extends BaseModel
       return $this->nombre;
    } 
 
-   public function getApellido1()
+   public function getApellidos()
    {
-      return $this->apellido1;
+      return $this->apellidos;
    }
 
-   public function getApellido2()
-   {
-      return $this->apellido2;
-   }
-
-   public function getImagen()
-   {
-      return $this->imagen;
-   }
-
-   public function getLogin()
-   {
-      return $this->login;
-   }
-
-   public function getPassword()
-   {
-      return $this->password;
-   }
-
-   public function getEmail()
+    public function getEmail()
    {
       return $this->email;
    }
 
-   public function getTelefono()
+    public function getPassword()
+   {
+      return $this->password;
+   }
+
+    public function getTelefono()
    {
       return $this->telefono;
    }
@@ -82,6 +65,16 @@ class UserModel extends BaseModel
    public function getDireccion()
    {
       return $this->direccion;
+   }
+
+   public function getEstado()
+   {
+      return $this->estado;
+   }
+
+   public function getImagen()
+   {
+      return $this->imagen;
    }
 
    public function getRol()
@@ -107,34 +100,19 @@ class UserModel extends BaseModel
       $this->nombre = $nombre;
    }
 
-   public function setApellido1($apellido1)
+   public function setApellidos($apellidos)
    {
-      $this->apellido1 = $apellido1;
-   }
-
-   public function setApellido2($apellido2)
-   {
-      $this->apellido2 = $apellido2;
-   }
-
-   public function setImagen($imagen)
-   {
-      $this->imagen = $imagen;
-   }
-
-   public function setLogin($login)
-   {
-      $this->login = $login;
-   }
-
-   public function setPassword($password)
-   {
-      $this->password = $password;
+      $this->apellidos = $apellidos;
    }
 
    public function setEmail($email)
    {
       $this->email = $email;
+   }
+
+   public function setPassword($password)
+   {
+      $this->password = $password;
    }
 
    public function setTelefono($telefono)
@@ -145,6 +123,16 @@ class UserModel extends BaseModel
    public function setDireccion($direccion)
    {
       $this->direccion = $direccion;
+   }
+
+   public function setEstado($estado)
+   {
+      $this->estado = $estado;
+   }
+
+   public function setImagen($imagen)
+   {
+      $this->imagen = $imagen;
    }
 
    public function setRol($rol_id)
@@ -161,7 +149,7 @@ class UserModel extends BaseModel
     * @param [type] $password password del usuario de la base ded atos.
     * @return si el usuario es corecto o, en caso contrario, un error.
     */
-    public function getByCredentials($user,$password)
+    public function getByCredentials($email,$password)
     {
        //PASSWORD CODIFICADO.
  
@@ -175,23 +163,29 @@ class UserModel extends BaseModel
  
        try {
           //MD5() es una función que encripta las contraseñas.
-          $sql="SELECT * FROM $this->table WHERE login = '$user' and password = MD5('$password')";
+          $sql="SELECT * FROM $this->table WHERE email = '$email' and password = MD5('$password')";
           
           $query = $this->db->query($sql);
        
           //Obtiene el primer elemento de la consulta.
           //Entra en el if si la consulta al menos devuelve un elemento.
           if($row = $query->fetchObject()) {
-              $result["data"]=$row;
+             if($row->estado==1){
+               $result["data"]=$row;
+             }else{
+               $result["isValid"] = false;
+               $result["error"] = "deactivated";
+             }
+              
  
           }else{
              //Sino encuentra elementos, el usuario o la contra son incorrectas, devolvemos un error.
              $result["isValid"] = false;
-             $result["mensaje"] = "Usuario o contraseña inválidos.";
+             $result["error"] = "notFound";
           }
  
        }catch (PDOException $ex) {
-          $result["mensaje"] = $ex->getMessage();
+          $result["error"] = $ex->getMessage();
           $result["isValid"] = false;
        }
        
@@ -218,7 +212,7 @@ class UserModel extends BaseModel
      * @param [type] $id no se modifica, solo servirá para identificar al usuario.
      * @return void
      */
-    public function editUser($nif, $nombre, $apellido1, $apellido2, $imagen, $password, $email, $telefono, $direccion, $rol_id, $id)
+    public function editUser($nif, $nombre, $apellidos, $password, $telefono, $direccion, $imagen, $id)
     {
         //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
         $return = [
@@ -228,10 +222,8 @@ class UserModel extends BaseModel
 
       try {
          $sql="UPDATE usuario SET 
-            nif = '$nif', nombre = '$nombre', apellido1 = '$apellido1', 
-            apellido2 = '$apellido2',
-             email = '$email', telefono = '$telefono', 
-            direccion = '$direccion', rol_id = '$rol_id'" ;
+            nif = '$nif', nombre = '$nombre', apellidos = '$apellidos', telefono = '$telefono', 
+            direccion = '$direccion'" ;
 
          if (isset($password) && $password != ""){
             $sql=$sql . ", password = MD5('$password')";
@@ -262,13 +254,13 @@ class UserModel extends BaseModel
 
 
     /**
-     * Encuentra al user mediante el login y el email si ambos son correctos y del mismo user.
+     * Encuentra al user mediante el el email si es correcto.
      *
      * @param [type] $login
      * @param [type] $email
      * @return void
      */
-    public function getByLoginAndEmail($login,$email)
+    public function getByEmail($email)
     {
       $result=[
          "correct"=> true,
@@ -276,13 +268,11 @@ class UserModel extends BaseModel
          "mensaje"=>null,
       ];
       try {
-         $sql="SELECT * FROM $this->table WHERE login = '$login' and email = '$email'";
-         
-         $query = $this->db->query($sql);
+         $query = $this->getBy('email',$email);
       
          //Obtiene el primer elemento de la consulta.
          //Entra en el if si la consulta al menos devuelve un elemento.
-         if($query) {
+         if(count($query) ==1) {
              $result["correct"]=true;
 
          }else{
@@ -292,7 +282,7 @@ class UserModel extends BaseModel
          }
 
       }catch (PDOException $ex) {
-         $result["mensaje"] = $ex->getMessage();
+         $result["error"] = $ex->getMessage();
          $result["correct"] = false;
       }
       return $result;//Devolvemos el resultado sea el error o el registro.
@@ -313,7 +303,7 @@ class UserModel extends BaseModel
      * @param [type] $direccion
      * @return void
      */
-    public function createUser($nif, $nombre, $apellido1, $apellido2, $imagen,$login, $password, $email, $telefono, $direccion)
+    public function createUser($nif, $nombre, $apellidos, $email,$password,$telefono, $direccion, $imagen)
     {
         //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
         $return = [
@@ -322,16 +312,16 @@ class UserModel extends BaseModel
          ];
 
       try {
-         $userList= $this->getBy("login", $login);
+         $userList= $this->getBy("email",$email);
 
          if(count($userList) != 0){
             //["login"] para que se meta en la parte de errores de login.
-            $return["errors"]["login"] = "Login no disponible.";
+            $return["errors"]["email"] = "Email no disponible.";
          }else{
             $sql="INSERT INTO usuario 
-               (nif, nombre, apellido1, apellido2, imagen, login, password, email, telefono, direccion, rol_id) 
+               (nif, nombre, apellidos,  email, password,telefono, direccion, estado, imagen, rol_id) 
                   VALUES 
-                  ('$nif', '$nombre', '$apellido1', '$apellido2',  '$imagen','$login', MD5('$password'), '$email', '$telefono', '$direccion', '2')" ;
+                  ('$nif', '$nombre', '$apellidos','$email',  MD5('$password'),  '$telefono', '$direccion','0','$imagen', '2')" ;
 
             $query = $this->db->query($sql);
 
@@ -349,7 +339,7 @@ class UserModel extends BaseModel
     }
 
 
-    public function changePassword($login,$password)
+    public function changePassword($email,$password)
     {
          //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
         $return = [
@@ -360,7 +350,7 @@ class UserModel extends BaseModel
          try {
             $sql="UPDATE usuario SET 
                 password = MD5('$password') 
-                  WHERE login = '$login'" ; 
+                  WHERE email = '$email'" ; 
             
             $query = $this->db->query($sql);
          

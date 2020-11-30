@@ -56,8 +56,8 @@ class UserController extends BaseController
                   $ruta_destino_archivo = "assets/img/avatarsUsers/{$fileName}";
                   $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
                }
-
-            $registrerCorrect=$userModel-> createUser($_POST["nif"], $_POST["nombre"], $_POST["apellido1"], $_POST["apellido2"], $fileName,  $_POST["login"], $_POST["passwordMod"], $_POST["email"], $_POST["telefono"], $_POST["direccion"]);
+                                                         
+            $registrerCorrect=$userModel-> createUser($_POST["nif"], $_POST["nombre"], $_POST["apellidos"], $_POST["email"], $_POST["passwordMod"],  $_POST["telefono"],$_POST["direccion"], $fileName);
 
             if($registrerCorrect["correct"]){
                $params=[
@@ -101,16 +101,19 @@ class UserController extends BaseController
          }else{
             $userModel=new UserModel();
 
-            $archivo = (isset($_FILES['imagen'])) ? $_FILES['imagen'] : null;
+            $archivo = (isset($_FILES['imagen']) && $_FILES["imagen"]["error"]==0) ? $_FILES['imagen'] : null;
+            $fileName="";
                if ($archivo) {
                   $fileName=uniqid("avatar",true);
                   $fileName=$fileName.".".pathinfo($archivo['name'],PATHINFO_EXTENSION);
                   $ruta_destino_archivo = "assets/img/avatarsUsers/{$fileName}";
                   $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
                }
-
-            $editCorrect=$userModel-> editUser($_POST["nif"], $_POST["nombre"], $_POST["apellido1"], $_POST["apellido2"], $fileName, $_POST["passwordMod"], $_POST["email"], $_POST["telefono"], $_POST["direccion"],$_SESSION['usuario']["rol_id"],  $_SESSION['usuario']["id"]);
-               $_SESSION["usuario"]["img"]=$fileName;
+                                                   
+            $editCorrect=$userModel-> editUser($_POST["nif"], $_POST["nombre"], $_POST["apellidos"],  $_POST["passwordMod"], $_POST["telefono"], $_POST["direccion"], $fileName, $_SESSION['usuario']["id"]);
+               if(isset($fileName) && $fileName!=""){
+                  $_SESSION["usuario"]["img"]=$fileName;
+               }
 
             //Cargamos la vista con los aprámetros de los errores, que serán los mensajes.
             $this->authView("editUser","user","index",$editCorrect);
@@ -118,7 +121,7 @@ class UserController extends BaseController
       }else{
          $userModel=new UserModel();
 
-         $user=$userModel->getBy("login",$_SESSION["usuario"]["login"]);
+         $user=$userModel->getBy("email",$_SESSION["usuario"]["email"]);//COGER CON $_GET(PARA ADMINCONTROLLLER)
 
          if(count($user)==1){
             $params=[
@@ -129,14 +132,6 @@ class UserController extends BaseController
             $this->redirect(DEFAULT_CONTROLLER,DEFAULT_ACTION);
          }
       } 
-   }
-
-
-
-
-   public function FunctionName(Type $var = null)
-   {
-      # code...
    }
 }
 ?>

@@ -6,12 +6,8 @@
     <div class="container">
       <form  action="index.php?controller=password&action=recuperate" method="POST" class="form">
         <div class="datos">
-          <label for="name">Login de usuario:
-            <!--sececho se coloca primero la variable del form por si existe, que recuerde en la casilla el nombre del form y no de la cookie (en caso de que exista).-->
-            <input type="text" name="loginUser" class="form-control usuario" <?php rememberValue($_POST["loginUser"],$_POST["loginUser"])?>/> 
-          </label>
-          <br/>
           <label for="password">Email:
+          <!--sececho se coloca primero la variable del form por si existe, que recuerde en la casilla el nombre del form y no de la cookie (en caso de que exista).-->
             <input type="email" name="emailUser" class="form-control contra" <?php rememberValue($_POST["emailUser"],$_POST["emailUser"])?>/>            
           </label>
           <br>
