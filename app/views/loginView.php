@@ -3,6 +3,15 @@
     <div class="container text-center cuerpo">	
       <p><h2> Login de usuario:</h2></p>
     </div>
+    <div class="text-center">
+          <?php 
+            if (isset($_GET["message"])){
+              if ($_GET["message"]=="registrer"){
+                 echo '<div class="alert alert-success" style="margin-top:5px;"> Se ha registrado correctamente.<br/> </div>';
+              }
+            }
+          ?> 
+    </div>
     <div class="container">
       <form  action="index.php?controller=index&action=login" method="POST" class="form">
         <div class="datos">
@@ -27,13 +36,13 @@
           <br>
           <label><button type="button" class="btn btn-secondary recuperarContra" onclick="location.href='index.php?controller=password&action=forgoted'">Olvidé mi contraseña</button></label> 
           <?php 
-            if (isset($_GET["mensaje"]) && $_GET["mensaje"]=="vacio"){
-                echo '<div class="alert alert-danger" style="margin-top:5px;"> No puede dejar los campos de usuario y/o contraseña vacíos.<br/> </div>';
-            }else if (isset($_GET["error"])){
+            if (isset($_GET["error"])){
               if ($_GET["error"]=="authRequired"){
                  echo '<div class="alert alert-danger" style="margin-top:5px;"> Debes estar logueado para acceder a este sitio.<br/> </div>';
-                }else{
+                }else if($_GET["error"]=="notFound"){
                   echo '<div class="alert alert-danger" style="margin-top:5px;"> Su nombre de usuario y/o contraseña no se encuentra en nuestra base de datos.<br/> </div>';
+                }else if($_GET["error"]=="empty"){
+                  echo '<div class="alert alert-danger" style="margin-top:5px;"> No puede dejar los campos de usuario y/o contraseña vacíos.<br/> </div>';
                 }
             }
 

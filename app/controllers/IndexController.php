@@ -55,7 +55,10 @@ class IndexController extends BaseController{
                     $_SESSION['usuario']= [
                         "login"=>$user["data"]->login,
                         "rol_id"=>$user["data"]->rol_id,
+                        "id"=>$user["data"]->id,
+                        "password"=>$user["data"]->password,
                         "nombre"=> $user["data"]->nombre,
+                        "img"=>$user["data"]->imagen,
                         "hora_login"=> date('H:i:s')
                     ];
 
@@ -79,12 +82,14 @@ class IndexController extends BaseController{
                     // Lógica asociada a mantener la sesión mantenerSesion 
                     if(isset($_POST['mantenerSesion'])&&($_POST['mantenerSesion']=="on")) // Si está seleccionado el checkbox...
                     { // Creamos las cookies de la sesion que incluye el nombre de user y su rol.
+
                 //-----------------------MODIFICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR.
                         //(El rol se borrará de las cookies porque pasará a leerse a bd.)
                         setcookie ('mantenerSesion' , 'on',time() + (15 * 24 * 60 * 60)); 
                         setcookie ('mantenerSesion_login' ,  $_SESSION['usuario']["login"],time() + (15 * 24 * 60 * 60));
                         setcookie ('mantenerSesion_rol' ,  $_SESSION['usuario']["rol_id"],time() + (15 * 24 * 60 * 60));
                         setcookie ('mantenerSesion_nombre' ,  $_SESSION['usuario']["nombre"],time() + (15 * 24 * 60 * 60));
+                        setcookie ('mantenerSesion_img' ,  $_SESSION['usuario']["img"],time() + (15 * 24 * 60 * 60));
                         setcookie ('mantenerSesion_hora' ,  $_SESSION['usuario']["hora_login"],time() + (15 * 24 * 60 * 60));
                     } else {  //Si no está seleccionado el checkbox..
                         // Eliminamos la cookie
@@ -94,6 +99,7 @@ class IndexController extends BaseController{
                             setcookie ('mantenerSesion',""); 
                             setcookie ('mantenerSesion_login',"");
                             setcookie ('mantenerSesion_rol',"");
+                            setcookie ('mantenerSesion_img' ,"");
                             setcookie ('mantenerSesion_nombre',"");
                             setcookie ('mantenerSesion_hora',"");
                         } 
@@ -103,15 +109,14 @@ class IndexController extends BaseController{
                 }else{
                     $params=[
                         "userName"=> $_POST['usuario'],
-                        "error"=> true
+                        "error"=> "notFound"
                     ];
                     parent::redirect("index","index",$params);
                 }  
             }else{
                 $params=[
                     "userName"=> $_POST['usuario'],
-                    "error"=> true,
-                    "mensaje"=>"vacio"
+                    "error"=>"empty"
                 ];
 
                 parent::redirect("index","index",$params);

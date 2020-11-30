@@ -35,7 +35,47 @@ class UserController extends BaseController
      */
     public function registrer()
     {
-      $this->view->show("editUser");
+      require_once 'ValidationFormController.php';
+      if(isset($_POST["submit"])){
+           
+         $errors=validate();
+
+         if(count($errors) != 0){
+            $params=[
+               "errors"=>$errors
+            ];
+            //Cargamos la vista con los aprámetros de los errores, que serán los mensajes.
+            $this->view->show("editUser",$params);
+         }else{
+            $userModel=new UserModel();
+
+            $archivo = (isset($_FILES['imagen'])) ? $_FILES['imagen'] : null;
+               if ($archivo) {
+                  $fileName=uniqid("avatar",true);
+                  $fileName=$fileName.".".pathinfo($archivo['name'],PATHINFO_EXTENSION);
+                  $ruta_destino_archivo = "assets/img/avatarsUsers/{$fileName}";
+                  $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
+               }
+
+            $registrerCorrect=$userModel-> createUser($_POST["nif"], $_POST["nombre"], $_POST["apellido1"], $_POST["apellido2"], $fileName,  $_POST["login"], $_POST["passwordMod"], $_POST["email"], $_POST["telefono"], $_POST["direccion"]);
+
+            if($registrerCorrect["correct"]){
+               $params=[
+                  "message"=>"registrer",
+               ];
+                
+               $this->redirect(DEFAULT_CONTROLLER, DEFAULT_ACTION,$params);
+            }else{ 
+               $params=[
+                  "errors"=>$registrerCorrect["errors"],
+               ];
+               $this->view->show("editUser",$params);
+            }
+         }
+      }else{
+          $this->view->show("editUser");
+      } 
+     
     }
 
 
@@ -47,20 +87,56 @@ class UserController extends BaseController
     */
    public function edit()
    {
-      $userModel=new UserModel();
+      require_once 'ValidationFormController.php';
+      if(isset($_POST["submit"])){
+           
+         $errors=validate();
 
-      $user=$userModel->getBy("login",$_SESSION["usuario"]["login"]);
+         if(count($errors) != 0){
+            $params=[
+               "errors"=>$errors
+            ];
+            //Cargamos la vista con los aprámetros de los errores, que serán los mensajes.
+            $this->authView("editUser","user","index",$params);
+         }else{
+            $userModel=new UserModel();
 
-      if(count($user)==1){
-         $params=[
-            "user"=>$user[0]//Cojo la posición porque cojo el usuario ya que el getby me lo devuelve dentro de un array y lo que necesito es el usuario.
-         ];
-         $this->authView("editUser","user","index",$params);
+            $archivo = (isset($_FILES['imagen'])) ? $_FILES['imagen'] : null;
+               if ($archivo) {
+                  $fileName=uniqid("avatar",true);
+                  $fileName=$fileName.".".pathinfo($archivo['name'],PATHINFO_EXTENSION);
+                  $ruta_destino_archivo = "assets/img/avatarsUsers/{$fileName}";
+                  $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
+               }
+
+            $editCorrect=$userModel-> editUser($_POST["nif"], $_POST["nombre"], $_POST["apellido1"], $_POST["apellido2"], $fileName, $_POST["passwordMod"], $_POST["email"], $_POST["telefono"], $_POST["direccion"],$_SESSION['usuario']["rol_id"],  $_SESSION['usuario']["id"]);
+               $_SESSION["usuario"]["img"]=$fileName;
+
+            //Cargamos la vista con los aprámetros de los errores, que serán los mensajes.
+            $this->authView("editUser","user","index",$editCorrect);
+         }
       }else{
-         $this->redirect(DEFAULT_CONTROLLER,DEFAULT_ACTION);
-      }
-       
+         $userModel=new UserModel();
+
+         $user=$userModel->getBy("login",$_SESSION["usuario"]["login"]);
+
+         if(count($user)==1){
+            $params=[
+               "user"=>$user[0]//Cojo la posición porque cojo el usuario ya que el getby me lo devuelve dentro de un array y lo que necesito es el usuario.
+            ];
+            $this->authView("editUser","user","index",$params);
+         }else{
+            $this->redirect(DEFAULT_CONTROLLER,DEFAULT_ACTION);
+         }
+      } 
    }
 
+
+
+
+   public function FunctionName(Type $var = null)
+   {
+      # code...
+   }
 }
 ?>

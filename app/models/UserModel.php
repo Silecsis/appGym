@@ -199,4 +199,179 @@ class UserModel extends BaseModel
        return $result;//Devolvemos el resultado sea el error o el registro.
     }
 
+
+
+    /**
+     * Actualiza al usuario en la base de datos.
+     *
+     * @param [type] $nif
+     * @param [type] $nombre
+     * @param [type] $apellido1
+     * @param [type] $apellido2
+     * @param [type] $imagen
+     * @param [type] $login
+     * @param [type] $password
+     * @param [type] $email
+     * @param [type] $telefono
+     * @param [type] $direccion
+     * @param [type] $rol_id
+     * @param [type] $id no se modifica, solo servirá para identificar al usuario.
+     * @return void
+     */
+    public function editUser($nif, $nombre, $apellido1, $apellido2, $imagen, $password, $email, $telefono, $direccion, $rol_id, $id)
+    {
+        //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
+        $return = [
+         "correcto" => FALSE,
+         "error" => NULL
+         ];
+
+      try {
+         $sql="UPDATE usuario SET 
+            nif = '$nif', nombre = '$nombre', apellido1 = '$apellido1', 
+            apellido2 = '$apellido2',
+             email = '$email', telefono = '$telefono', 
+            direccion = '$direccion', rol_id = '$rol_id'" ;
+
+         if (isset($password) && $password != ""){
+            $sql=$sql . ", password = MD5('$password')";
+         } 
+
+         if (isset($imagen) && $imagen != ""){
+            $sql=$sql . ", imagen = '$imagen'";
+         }
+
+         $sql=$sql . " WHERE id = '$id'";
+         
+         $query = $this->db->query($sql);
+      
+         //Supervisamos si la inserción se realizó correctamente... 
+         if ($query) {
+            $_SESSION["usuario"]["password"]=MD5($password);
+            $return["correcto"] = TRUE;
+         } 
+
+      }catch (PDOException $ex) {
+         $return["error"] = $ex->getMessage();
+      }
+      
+
+      return $return;
+    }
+
+
+
+    /**
+     * Encuentra al user mediante el login y el email si ambos son correctos y del mismo user.
+     *
+     * @param [type] $login
+     * @param [type] $email
+     * @return void
+     */
+    public function getByLoginAndEmail($login,$email)
+    {
+      $result=[
+         "correct"=> true,
+         "error"=>null,
+         "mensaje"=>null,
+      ];
+      try {
+         $sql="SELECT * FROM $this->table WHERE login = '$login' and email = '$email'";
+         
+         $query = $this->db->query($sql);
+      
+         //Obtiene el primer elemento de la consulta.
+         //Entra en el if si la consulta al menos devuelve un elemento.
+         if($query) {
+             $result["correct"]=true;
+
+         }else{
+            //Sino encuentra elementos, el usuario o la contra son incorrectas, devolvemos un error.
+            $result["correct"] = false;
+            $result["error"] = "campo";
+         }
+
+      }catch (PDOException $ex) {
+         $result["mensaje"] = $ex->getMessage();
+         $result["correct"] = false;
+      }
+      return $result;//Devolvemos el resultado sea el error o el registro.
+    }
+
+    /**
+     * Crea el user
+     *
+     * @param [type] $nif
+     * @param [type] $nombre
+     * @param [type] $apellido1
+     * @param [type] $apellido2
+     * @param [type] $imagen
+     * @param [type] $login
+     * @param [type] $password
+     * @param [type] $email
+     * @param [type] $telefono
+     * @param [type] $direccion
+     * @return void
+     */
+    public function createUser($nif, $nombre, $apellido1, $apellido2, $imagen,$login, $password, $email, $telefono, $direccion)
+    {
+        //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
+        $return = [
+         "correct" => FALSE,
+         "errors" => []
+         ];
+
+      try {
+         $userList= $this->getBy("login", $login);
+
+         if(count($userList) != 0){
+            //["login"] para que se meta en la parte de errores de login.
+            $return["errors"]["login"] = "Login no disponible.";
+         }else{
+            $sql="INSERT INTO usuario 
+               (nif, nombre, apellido1, apellido2, imagen, login, password, email, telefono, direccion, rol_id) 
+                  VALUES 
+                  ('$nif', '$nombre', '$apellido1', '$apellido2',  '$imagen','$login', MD5('$password'), '$email', '$telefono', '$direccion', '2')" ;
+
+            $query = $this->db->query($sql);
+
+         
+            //Supervisamos si la inserción se realizó correctamente... 
+            if ($query) {
+               $return["correct"] = TRUE;
+            } 
+         }
+      }catch (PDOException $ex) {
+         $return["errors"]["generic"] = $ex->getMessage();
+      }
+
+      return $return;
+    }
+
+
+    public function changePassword($login,$password)
+    {
+         //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
+        $return = [
+         "correct" => FALSE,
+         "error" => NULL
+         ];
+
+         try {
+            $sql="UPDATE usuario SET 
+                password = MD5('$password') 
+                  WHERE login = '$login'" ; 
+            
+            $query = $this->db->query($sql);
+         
+            //Supervisamos si la inserción se realizó correctamente... 
+            if ($query) {
+               $return["correct"] = TRUE;
+            } 
+
+         }catch (PDOException $ex) {
+            $return["error"] = $ex->getMessage();
+         }
+         return $return; 
+   }
 }

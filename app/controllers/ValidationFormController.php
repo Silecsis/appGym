@@ -4,25 +4,15 @@
  * Script que muestra en una tabla los valores enviados por el usuario a través 
  * del formulario utilizando el método POST
  */
-// Definimos e inicializamos el array de errores y las variables asociadas a cada campo
-$errors = [];
-$nif="";
-$nombre = "";
-$apellido1 = "";
-$apellido2 = "";
-$imagen = "";
-$login = "";
-$password = "";
-$email = "";
-$telefono = "";
-$direccion = "";
-$rol    = "2";//Por defecto el rol siempre es de usuario.
+
+
 
 // Función que muestra el mensaje de error bajo el campo que no ha superado
 // el proceso de validación
-function mostrar_error($errors, $campo) {
+function mostrar_error(&$errors, $campo) {
   $alert = "";
-  if (isset($errors[$campo]) && (!empty($campo))) {
+  
+  if (isset($errors) && isset($errors[$campo]) && (!empty($campo))) {
     $alert = '<div class="alert alert-danger" style="margin-top:5px;">' . $errors[$campo] . '</div>';
   }
   return $alert;
@@ -60,85 +50,130 @@ function comprobarNif($cadena)
 }
 
 
+/**
+ * Filtra el dato.
+ *
+ * @param [type] $datos será el campo a filtrar.
+ * @return void
+ */
+function filtrado($datos){
+  $datos = trim($datos); //Elimina espacios antes y después de los datos
+  $datos = stripslashes($datos); //Elimina backslashes\
+  $datos = htmlspecialchars($datos); //Traduce caracteres especiales en entidades HTML
+  return $datos;
+}
+
+
+
 // Verificamos si todos los campos han sido validados
-function validez($errors) {
-  if (isset($_POST["submit"]) && (count($errors) == 0)) {
-    return '<div class="alert alert-success" style="margin-top:5px;"> Formulario validado correctamente!! :)</div>';
-  }
-}
+function validate() {
 
-if (isset($_POST["submit"])) {
-  if (!empty($_POST["nif"]) && (preg_match("/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i", $_POST["nif"])) && comprobarNif($_POST["nif"])) {
-    $nif = trim($_POST["nif"]);
-    $nif = filter_var($nif, FILTER_SANITIZE_STRING);
-  } else {
-    $errors["nif"] = "Nif no válido. Asegúsrese de que el nif tiene un tamaño de 9 caracteres siendo los 8 primeros números y el último una letra divisible entre 23.";
-  }
+  // Definimos e inicializamos el array de errores y las variables asociadas a cada campo
+    $nif="";
+    $nombre = "";
+    $apellido1 = "";
+    $apellido2 = "";
+    $imagen = "";
+    $login = "";
+    $password = "";
+    $passwordMod="";
+    $email = "";
+    $telefono = "";
+    $direccion = "";
+    $rol    = "2";//Por defecto el rol siempre es de usuario.
 
-  if (!empty($_POST["nombre"]) && (!preg_match("/[0-9]/", $_POST["nombre"])) && (strlen($_POST["nombre"]) < 15)) {
-    $nombre = trim($_POST["nombre"]);
-    $nombre = filter_var($nombre, FILTER_SANITIZE_STRING);
-  } else {
-    $errors["nombre"] = "Nombre no válido. Asegúrate de que no tenga números ni una longitud mayor de 15.";
-  }
 
-  if (!empty($_POST["apellido1"]) && (!preg_match("/[0-9]/", $_POST["apellido1"])) && (strlen($_POST["apellido1"]) < 20)) {
-    $apellido1 = trim($_POST["apellido1"]);
-    $apellido1 = filter_var($apellido1, FILTER_SANITIZE_STRING);
-  } else {
-    $errors["apellido1"] = "Apellido (primero) no válido. Asegúrate de que no tenga números ni una longitud mayor de 20.";
-  }
 
-  if (!empty($_POST["apellido2"]) && (!preg_match("/[0-9]/", $_POST["apellido2"])) && (strlen($_POST["apellido2"]) < 20)) {
-    $apellido2 = trim($_POST["apellido2"]);
-    $apellido2 = filter_var($apellido2, FILTER_SANITIZE_STRING);
-  } else {
-    $errors["apellido2"] = "Apellido (segundo) no válido. Asegúrate de que no tenga números ni una longitud mayor de 20.";
-  }
+  $errors=[];
 
-  if (!isset($_FILES["imagen"]) || empty($_FILES["imagen"]["tmp_name"])) {
-    $errors["imagen"] = "Imagen no válida. Vacio";
-  }
+    if (isset($_POST["submit"])) {
 
-  if (!empty($_POST["login"]) && (strlen($_POST["login"]) < 15)) {
-    $login = trim($_POST["login"]);
-    $login = filter_var($login, FILTER_SANITIZE_STRING);
-  } else {
-    $errors["login"] = "Login no válido. Asegúrate de que no tenga una longitud mayor de 15. EXISTENCIA";
-  }
+        $nif=filtrado($_POST["nif"]);
 
-  if (empty($_POST["login"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["password"]))) {
-    $errors["password"] = "Contraseña no válida.  Asegúrese de que tenga tener una longitud mínima de 8 caracteres y contener letras mayúsculas, minúsculas, números y caracteres especiales.";
-   
-  } else {
-    $password = sha1($_POST["password"]);
-  }
+        if (empty($nif) || (!preg_match("/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i",$nif)) || !comprobarNif($nif)) {
+          $errors["nif"] = "Nif no válido. Asegúsrese de que el nif tiene un tamaño de 9 caracteres siendo los 8 primeros números y el último una letra divisible entre 23.";   
+        } 
+      
+        $nombre=filtrado($_POST["nombre"]);
+        if (empty($nombre) || (preg_match("/[0-9]/", $nombre)) || (strlen($nombre) > 15)) {
+           $errors["nombre"] = "Nombre no válido. Asegúrate de que no tenga números ni una longitud mayor de 15.";
+        } 
 
-  if (!empty($_POST["email"])) {
-    $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-      $errors["email"] = "Email no válido. Asegúrese de que esté bien escrito.";
+        $apellido1=filtrado($_POST["apellido1"]);
+        if (empty($apellido1) || (preg_match("/[0-9]/", $apellido1)) || (strlen($apellido1) > 20)) {
+          $errors["apellido1"] = "Apellido (primero) no válido. Asegúrate de que no tenga números ni una longitud mayor de 20.";
+        }
+
+        $apellido2=filtrado($_POST["apellido2"]);
+        if (empty($apellido2) || (preg_match("/[0-9]/", $apellido2)) || (strlen($apellido2) > 20)) {
+          $errors["apellido2"] = "Apellido (segundo) no válido. Asegúrate de que no tenga números ni una longitud mayor de 20.";
+        }
+      
+        //Si no está logado. Control contras, imagen y login
+        if(!isset($_SESSION["usuario"])){
+            if (!isset($_FILES["imagen"]) || $_FILES["imagen"]["error"] != 0) {
+              $errors["imagen"] = "Imagen no válida. Vacio";
+            }
+
+            $login=filtrado($_POST["login"]);
+            if (empty( $login) || (strlen($login) > 15)) {
+              $errors["login"] = "Login no válido. Asegúrate de que no tenga una longitud mayor de 15. EXISTENCIA";
+            }
+
+            if (empty($_POST["passwordMod"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["passwordMod"]))) {
+              $errors["passwordMod"] = "Contraseña no válida.  Asegúrese de que tenga tener una longitud mínima de 8 caracteres y contener letras mayúsculas, minúsculas, números y caracteres especiales.";
+            }
+        }else{
+            //Para modificar contra. (passwordMod)
+            $passwordAct=$_SESSION["usuario"]["password"]; //La contra actual.
+            $passwordMod=filtrado($_POST["passwordMod"]); //La contra nueva.
+            $password=filtrado($_POST["password"]); //La contra que introduce el user como actual.
+            //Si la contra introducida por el user no es igual a la que hay en base de datos, se informa.
+            if(!empty($password) && MD5($password) !== $passwordAct){
+              $_POST["passwordMod"]="";
+              $errors["password"] = "La contraseña que ha introducido no es la que figura en nuestra base de datos.";
+            }else if (!empty($password) && MD5($password) === $passwordAct){
+              if (empty($_POST["passwordMod"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["passwordMod"]))) {
+                
+                $errors["passwordMod"] = "Contraseña no válida.  Asegúrese de que tenga tener una longitud mínima de 8 caracteres y contener letras mayúsculas, minúsculas, números y caracteres especiales.";
+              }
+            }
+        }
+
+
+        
+
+        
+        // //Contra actual.
+        // $password=filtrado($_POST["password"]);
+        // if (empty($_POST["password"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["password"]))) {
+        //   $errors["password"] = "Contraseña no válida.  Asegúrese de que tenga tener una longitud mínima de 8 caracteres y contener letras mayúsculas, minúsculas, números y caracteres especiales.";
+        // } 
+      
+        if (!empty($_POST["email"])) {
+          $password=filtrado($_POST["email"]);
+        }else{
+          $errors["email"] = "Email no válido. No puede estar el campo vacío.";
+        }
+      
+        
+
+        //Valida telefono movil español y telefono fijo español
+        
+        if ((!empty($_POST["telefono"]) && preg_match("/^(\34|0034|34)?[ -]*(6|7)[ -]*([0-9][ -]*){8}$/", $_POST["telefono"])) 
+            || (!empty($_POST["telefono"])) && preg_match("/^(\34|0034|34)?[ -]*(8|9)[ -]*([0-9][ -]*){8}$/", $_POST["telefono"])) {
+               $telefono=filtrado($_POST["telefono"]);
+        } else {
+          $errors["telefono"] = "Teléfono no válido. Asegúrese de que empiece por '0034' o '34' (estos casos anteriores opcionales, lo siguiente es obligatorio), que luego le siga un '6' o '7' (en caso de ser móvil) o '8' o '9' (en caso de ser fijo) y que el resto de números tengan una longitud de 8 caracteres.";
+        }
+        
+
+        if (empty($_POST["direccion"])) {
+          $errors["direccion"] = "Dirección no válida. Vacio.";
+        }
     }
-  }else{
-    $errors["email"] = "Email no válido. No puede estar el campo vacío.";
-  }
-
-  //Valida telefono movil español y telefono fijo español
-  if ((!empty($_POST["telefono"]) && (preg_match("/^(\+34|0034|34)?[ -]*(6|7)[ -]*([0-9][ -]*){8}$/", $_POST["telefono"]))) 
-      ||(!empty($_POST["telefono"]) && (preg_match("/^(\+34|0034|34)?[ -]*(8|9)[ -]*([0-9][ -]*){8}$/", $_POST["telefono"])))) {
-    $telefono = trim($_POST["telefono"]);
-    $telefono = filter_var($telefono, FILTER_SANITIZE_STRING);
-  } else {
-    $errors["telefono"] = "Teléfono no válido. Asegúrese de que empiece por '+34', '0034' o '34' (estos casos anteriores opcionales, lo siguiente es obligatorio), que luego le siga un '6' o '7' (en caso de ser móvil) o '8' o '9' (en caso de ser fijo) y que el resto de números tengan una longitud de 8 caracteres.";
-  }
-  
-  if (!empty($_POST["direccion"]) ) {
-    $direccion = trim($_POST["direccion"]);
-    $direccion = filter_var($direccion, FILTER_SANITIZE_STRING);
-  } else {
-    $errors["direccion"] = "Dirección no válida. Vacio.";
-  }
-
-  
+  return $errors;
 }
+
+
 ?>

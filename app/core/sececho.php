@@ -1,10 +1,11 @@
 <?php
 /**
- * Si str está definida, hace un echo del valor str.
- * Sino, hace un echo del default.
+ * Si strList está indefinida o no continuene ningun elemento definido,
+ * devuelve el primero que esté definido.
+ * Sino, devuelve null.
  *
- * @param [type] $str Recibe un String (que puede ser indefinido con el "&").
- * @param [type] $default Valor que queremos mostrar si no está definido. 
+ * @param [type] $strList Lista (que puede ser indefinido con el "&") de
+ * posibles textos.
  * @return void
  */
     function sececho(&...$strList) {
@@ -21,16 +22,27 @@
 
 
     /**
-     * Si existe el campo del form, se recuerda.
-     *
-     * @param [*] $campo form
+     * Imprime el atributo value con un valor que depende de los parámetros postvalue y originalvalue.
+     * Si ninguno de los dos está especificado, el valor es vacio. 
+     * 
+     * Si se especifica postvalue, el valor es el que tiene postvalue.
+     * Si se especifica originalvalue y no se especifica postvalue, el valor es originalvalue.
+     * 
+     * (&--> puede ser indeefinido)
+     * @param [*] $postValue form
      * @return void
      */
-    function rememberCamp($campo)
+    function rememberValue(&$postValue,&$originalValue)
     {
-        if(isset($_POST["$campo"])){
-            echo "value='{$_POST["$campo"]}'";
+        $value="";
+
+        if(isset($postValue)){
+            $value=$postValue;
+        }else if(isset($originalValue)){
+            $value=$originalValue;
         }
+
+        echo "value='$value'";
     }
 
     
