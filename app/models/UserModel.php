@@ -145,7 +145,7 @@ class UserModel extends BaseModel
    * Para logar al usuario mediante la base de datos.
     * Devuelve los datos del usuario logado si los datos son correctos con la base de datos.
     *
-    * @param [type] $user Usuario de la base de datos.
+    * @param [type] $email Usuario de la base de datos mediante el email.
     * @param [type] $password password del usuario de la base ded atos.
     * @return si el usuario es corecto o, en caso contrario, un error.
     */
@@ -162,6 +162,7 @@ class UserModel extends BaseModel
        ];
  
        try {
+          //Buscamos al usuario en la bd mediante su email y contraseña.
           //MD5() es una función que encripta las contraseñas.
           $sql="SELECT * FROM $this->table WHERE email = '$email' and password = MD5('$password')";
           
@@ -171,13 +172,14 @@ class UserModel extends BaseModel
           //Entra en el if si la consulta al menos devuelve un elemento.
           if($row = $query->fetchObject()) {
              if($row->estado==1){
+                //Si está activo el usuario, se devuelven los datos de la bs.
                $result["data"]=$row;
              }else{
+                //Sino, se enviará un error.
                $result["isValid"] = false;
                $result["error"] = "deactivated";
              }
               
- 
           }else{
              //Sino encuentra elementos, el usuario o la contra son incorrectas, devolvemos un error.
              $result["isValid"] = false;
@@ -189,27 +191,21 @@ class UserModel extends BaseModel
           $result["isValid"] = false;
        }
        
- 
        return $result;//Devolvemos el resultado sea el error o el registro.
     }
 
 
-
     /**
-     * Actualiza al usuario en la base de datos.
+     * Actualiza al usuario de la bd.
      *
      * @param [type] $nif
      * @param [type] $nombre
-     * @param [type] $apellido1
-     * @param [type] $apellido2
-     * @param [type] $imagen
-     * @param [type] $login
+     * @param [type] $apellidos
      * @param [type] $password
-     * @param [type] $email
      * @param [type] $telefono
      * @param [type] $direccion
-     * @param [type] $rol_id
-     * @param [type] $id no se modifica, solo servirá para identificar al usuario.
+     * @param [type] $imagen
+     * @param [type] $id
      * @return void
      */
     public function editUser($nif, $nombre, $apellidos, $password, $telefono, $direccion, $imagen, $id)
@@ -221,18 +217,22 @@ class UserModel extends BaseModel
          ];
 
       try {
+         //sentencia sql que edita al usuario.
          $sql="UPDATE usuario SET 
             nif = '$nif', nombre = '$nombre', apellidos = '$apellidos', telefono = '$telefono', 
             direccion = '$direccion'" ;
 
          if (isset($password) && $password != ""){
+            //Si cambia la contraseña, se incluye en el sql.
             $sql=$sql . ", password = MD5('$password')";
          } 
 
          if (isset($imagen) && $imagen != ""){
+            //Si cambia la imagen, se incluye en el sql
             $sql=$sql . ", imagen = '$imagen'";
          }
 
+         //Por ultimo, insertamos el dato único que será el id para más seguridad que el email.
          $sql=$sql . " WHERE id = '$id'";
          
          $query = $this->db->query($sql);
@@ -246,17 +246,12 @@ class UserModel extends BaseModel
       }catch (PDOException $ex) {
          $return["error"] = $ex->getMessage();
       }
-      
-
       return $return;
     }
 
-
-
     /**
-     * Encuentra al user mediante el el email si es correcto.
+     * Encuentra al user mediante el email si es correcto.
      *
-     * @param [type] $login
      * @param [type] $email
      * @return void
      */
@@ -276,7 +271,7 @@ class UserModel extends BaseModel
              $result["correct"]=true;
 
          }else{
-            //Sino encuentra elementos, el usuario o la contra son incorrectas, devolvemos un error.
+            //Sino encuentra elementos, devolvemos un error.
             $result["correct"] = false;
             $result["error"] = "campo";
          }
@@ -288,21 +283,19 @@ class UserModel extends BaseModel
       return $result;//Devolvemos el resultado sea el error o el registro.
     }
 
-    /**
-     * Crea el user
-     *
-     * @param [type] $nif
-     * @param [type] $nombre
-     * @param [type] $apellido1
-     * @param [type] $apellido2
-     * @param [type] $imagen
-     * @param [type] $login
-     * @param [type] $password
-     * @param [type] $email
-     * @param [type] $telefono
-     * @param [type] $direccion
-     * @return void
-     */
+   /**
+    * Crea el user.
+    *
+    * @param [type] $nif
+    * @param [type] $nombre
+    * @param [type] $apellidos
+    * @param [type] $email
+    * @param [type] $password
+    * @param [type] $telefono
+    * @param [type] $direccion
+    * @param [type] $imagen
+    * @return void
+    */
     public function createUser($nif, $nombre, $apellidos, $email,$password,$telefono, $direccion, $imagen)
     {
         //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
@@ -315,9 +308,11 @@ class UserModel extends BaseModel
          $userList= $this->getBy("email",$email);
 
          if(count($userList) != 0){
-            //["login"] para que se meta en la parte de errores de login.
+            //["email"] para que se meta en la parte de errores de email.
+            //Se realizará cuando incluya un email que ya existe en la bd
             $return["errors"]["email"] = "Email no disponible.";
          }else{
+            //Sino, creamos el user y lo incluimos en la bd.
             $sql="INSERT INTO usuario 
                (nif, nombre, apellidos,  email, password,telefono, direccion, estado, imagen, rol_id) 
                   VALUES 
@@ -339,6 +334,13 @@ class UserModel extends BaseModel
     }
 
 
+    /**
+     * Cambiará la contraseña en la bd.
+     *
+     * @param [type] $email
+     * @param [type] $password
+     * @return void
+     */
     public function changePassword($email,$password)
     {
          //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
@@ -363,5 +365,42 @@ class UserModel extends BaseModel
             $return["error"] = $ex->getMessage();
          }
          return $return; 
-   }
+    }
+
+
+    /**
+     * Lista los usuarios.
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function listUserDatas()
+    {
+      $return = [
+         "correct" => FALSE,
+         "users" => [],
+         "error" => NULL
+      ];
+      
+      try {
+         $sql="SELECT * FROM usuario" ; 
+            
+         $query = $this->db->query($sql);
+
+         //Supervisamos que la consulta se realizó correctamente... 
+         if ($query) {
+             $row = $query;
+            foreach ($row as $r) {
+               $return["correct"] = TRUE;
+               $return["users"] []= $r;
+            }
+           
+         } 
+      } catch (PDOException $ex) {
+         $return["error"] = $ex->getMessage();
+       } 
+
+      return $return;
+      
+    }
 }

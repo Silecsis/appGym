@@ -2,19 +2,30 @@
         <h1>Gimnasio Lavanda</h1>
 
         <!--Si no estamos logueados, no podremos cerrar sesión, por lo que no aparecerá la sesión.-->
-        <?php
-        //---------------------------AQUI METER INCLUDE CON NAVVV!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            if(isset($_SESSION['logueado'])){
-        ?>
+        <?php if(isset($_SESSION['logueado'])){ ?>
             <div class="navHeader"> 
+                <!--Si se entra como admin:-->
+                 <?php if ($_SESSION['usuario']["rol_id"]=='1'){ ?>
+                        <div class="dropdown mr-auto adminUser">
+                            <button class="btn dropdown-toggle adminUser" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Administrar usuarios
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item adminUser"  href="index.php?controller=user&action=listUser">Listar todos</a><!--Lista de usuarios-->
+                                <a class="dropdown-item adminUser"  href="index.php?controller=user&action=newUser">Nuevo usuario</a><!--Registrar nuevo user-->
+                            </div>
+                        </div>
+                    <?php } ?>
+
                 <nav class="mb-1 navbar navbar-expand-lg navbar-dark default-color">
                 <!--Enlace para ir a home-->
-                    <a class="navbar-brand" href="index.php?controller=home&action=index"><i class="fa fa-home" aria-hidden="true"></i></a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
+                    <a class="navbar-brand" href="index.php?controller=home&action=index"><i class="fa fa-home" aria-hidden="true">Home</i></a>
+                    <button class="navbar-toggler mr" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
                         aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
+                   
+                    <div class="collapse navbar-collapse text-right" id="navbarSupportedContent-333">
                         <ul class="navbar-nav ml-auto nav-flex-icons">
                             <li class="nav-item">
                             <!--Nombre user-->
@@ -60,7 +71,5 @@
                     </div>
                 </nav>  
             </div>        
-        <?php
-            }
-        ?>
+        <?php } ?>
     </header>

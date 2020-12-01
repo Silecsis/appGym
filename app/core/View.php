@@ -41,7 +41,7 @@ class View
 
    /**
     * Valida si el user está logueado, y si no, le reenvia al index para que se loguee.
-    *
+    * Boolean.
     * @param string $name Nombre de nuestra vista, por ej, Login
     * @param array $vars conjunto de variables que se van a usar en la vista. 
     * @return void
@@ -56,4 +56,25 @@ class View
       }
    }
 
+   /**
+    * Redirige a la vista si está logueado y el rol es admin.
+    * Boolean.
+    *
+    * @return void
+    */
+   public function adminAuthShow($name, $vars = array())
+   {
+      //Comprobamos que esté logueado.
+      if(isset( $_SESSION['logueado'])){
+         //Comprobamos que sea rol admin
+         if($_SESSION["usuario"]["rol_id"]==1){
+            $this->show($name, $vars);
+            return true;
+         }else{
+            return false;
+         }
+      }else{
+          return false;
+      }
+   }
 }

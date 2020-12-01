@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ * Clase controlador de la vista homeView.php.
  */
 class HomeController extends BaseController{
 
@@ -11,12 +11,12 @@ class HomeController extends BaseController{
     }
 
     /**
-     * Carga el login.
+     * Carga la vista home.
      *
      * @return void
      */
     public function index (){
-        $this->authView("home","home","index"); //Carga la variable view de la clase View.
+        $this->authView("home","home","index"); 
     }
 
     

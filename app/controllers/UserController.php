@@ -8,7 +8,9 @@ require_once MODELS_FOLDER . 'UserModel.php';
 /**
  * Clase controlador que será la encargada de obtener, para cada tarea, los datos
  * necesarios de la base de datos, y posteriormente, tras su proceso de elaboración,
- * enviarlos a la vista para su visualización
+ * enviarlos a la vista para su visualización.
+ * 
+ * Inicialmente generará los cambios del usuario.
  */
 class UserController extends BaseController
 {
@@ -31,22 +33,25 @@ class UserController extends BaseController
    }
 
    /**
-     * Carga la vista para registrar el usuario.
+     * Registrar el usuario desde el login.
      */
     public function registrer()
     {
+       //Llamamos al controlador del formulario.
       require_once 'ValidationFormController.php';
       if(isset($_POST["submit"])){
-           
+           //Asociamos una variable de error por si no se validan los campos, que aparezcan en esa variable.
          $errors=validate();
 
          if(count($errors) != 0){
+            //Si hay errores, se muestran.
             $params=[
                "errors"=>$errors
             ];
-            //Cargamos la vista con los aprámetros de los errores, que serán los mensajes.
+            //y cargamos la vista con los aprámetros de los errores, que serán los mensajes.
             $this->view->show("editUser",$params);
          }else{
+            //Si no hay errores, se meten los datos en la bd.
             $userModel=new UserModel();
 
             $archivo = (isset($_FILES['imagen'])) ? $_FILES['imagen'] : null;
@@ -60,12 +65,14 @@ class UserController extends BaseController
             $registrerCorrect=$userModel-> createUser($_POST["nif"], $_POST["nombre"], $_POST["apellidos"], $_POST["email"], $_POST["passwordMod"],  $_POST["telefono"],$_POST["direccion"], $fileName);
 
             if($registrerCorrect["correct"]){
+               //Si el registro es correcto, le mandamos al index para que se loguee.
                $params=[
                   "message"=>"registrer",
                ];
                 
                $this->redirect(DEFAULT_CONTROLLER, DEFAULT_ACTION,$params);
             }else{ 
+               //Sino, le mandamos a la isma vista.
                $params=[
                   "errors"=>$registrerCorrect["errors"],
                ];
@@ -81,7 +88,7 @@ class UserController extends BaseController
 
 
    /**
-    * Redirige a editView.
+    * Edita el perfil del usuario (desde el mismo usuario).
     *
     * @return void
     */
@@ -99,6 +106,7 @@ class UserController extends BaseController
             //Cargamos la vista con los aprámetros de los errores, que serán los mensajes.
             $this->authView("editUser","user","index",$params);
          }else{
+            //Sino hay errores, modificamos los datos del user en la bd.
             $userModel=new UserModel();
 
             $archivo = (isset($_FILES['imagen']) && $_FILES["imagen"]["error"]==0) ? $_FILES['imagen'] : null;
@@ -115,10 +123,12 @@ class UserController extends BaseController
                   $_SESSION["usuario"]["img"]=$fileName;
                }
 
-            //Cargamos la vista con los aprámetros de los errores, que serán los mensajes.
+            //Cargamos la vista con los aprámetros de los errores en caso de que hallan.
             $this->authView("editUser","user","index",$editCorrect);
          }
       }else{
+         //Si no se ha pulsado el boton de enviar, significará que el usuario ha abierto la vista,
+         //por lo que se mostrarán sus datos en las casillas para que pueda modificar/editar
          $userModel=new UserModel();
 
          $user=$userModel->getBy("email",$_SESSION["usuario"]["email"]);//COGER CON $_GET(PARA ADMINCONTROLLLER)
@@ -132,6 +142,43 @@ class UserController extends BaseController
             $this->redirect(DEFAULT_CONTROLLER,DEFAULT_ACTION);
          }
       } 
+   }
+
+
+   /**
+    * Lista los usuarios.
+    * Solo lo hace el rol de admin.
+    *
+    * @return void
+    */
+   public function listUser()
+   {
+      $userModel=new UserModel();
+      $user=$userModel->listUserDatas();
+
+      if($user["correct"]){
+         $params=[
+            "data"=>$user
+         ];
+      }else{
+         $params=[
+            "error"=>"unexpected"
+         ];
+      }
+
+      $this->view->adminAuthShow("listUser",$params);
+   }
+
+
+   /**
+    * Crea un nuevo usuario.
+    * Solo lo hace el rol de admin.
+    *
+    * @return void
+    */
+   public function newUser()
+   {
+      $this->view->adminAuthShow("newUser");
    }
 }
 ?>

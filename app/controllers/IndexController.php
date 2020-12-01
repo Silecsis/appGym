@@ -1,6 +1,7 @@
 <?php
 /**
- * 
+ * Controlador de la vista loginView.php.
+ * Controlador principal.
  */
 //Para que cargue la clase del modelo:
  require_once MODELS_FOLDER."UserModel.php";
@@ -15,7 +16,7 @@ class IndexController extends BaseController{
     }
 
     /**
-     * Carga el login.
+     * Carga la vista del login.
      *
      * @return void
      */
@@ -34,7 +35,7 @@ class IndexController extends BaseController{
      * @return void
      */
     public function login(){
-        //Los usuarios que valen serán de la bd.
+        //Los usuarios que valen serán de la bd. Deberán estar activos por un admin para entrar.
 
         //Cuando pulsamos el botón enviar.
         if(isset($_POST['submit']))
@@ -42,16 +43,19 @@ class IndexController extends BaseController{
             if((isset($_POST['usuario'])&& isset($_POST['password'])) 
                 && (!empty($_POST['usuario'])&& !empty($_POST['password'])))
             {
+                //Creamos un nuevo usuario del modelo.
                 $userModel=new UserModel();
 
+                //Comprobamos si los datos introducidos estan en la bd.
                 $user=$userModel->getByCredentials($_POST['usuario'],$_POST['password']);
 
-                //Si la BBDD indica que el usuario y la contraseña coinciden...
+                //Si la bd indica que el usuario(email) y la contraseña coinciden...
                 if ($user["isValid"]) 
                 {
+                    //Estará logueado.
                     $_SESSION['logueado']=true;
 
-                    //Guardamos el nombre del user y el rol del user en la variable de sesión.
+                    //Guardamos los siguientes datos en la variable de sesión del user.
                     $_SESSION['usuario']= [
                         "email"=>$user["data"]->email,
                         "rol_id"=>$user["data"]->rol_id,
@@ -83,7 +87,7 @@ class IndexController extends BaseController{
                     if(isset($_POST['mantenerSesion'])&&($_POST['mantenerSesion']=="on")) // Si está seleccionado el checkbox...
                     { // Creamos las cookies de la sesion que incluye el nombre de user y su rol.
 
-                //-----------------------MODIFICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR.
+//-----------------------MODIFICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR.
                         //(El rol se borrará de las cookies porque pasará a leerse a bd.)
                         setcookie ('mantenerSesion' , 'on',time() + (15 * 24 * 60 * 60)); 
                         setcookie ('mantenerSesion_email' ,  $_SESSION['usuario']["email"],time() + (15 * 24 * 60 * 60));
@@ -104,9 +108,10 @@ class IndexController extends BaseController{
                             setcookie ('mantenerSesion_hora',"");
                         } 
                     }
-                    // Redirigimos a la página de inicio de nuestro sitio  
+                    // Redirigimos a homeView.php una vez esté todo correcto.  
                     parent::redirect("home","index");
                 }else{
+                    //Si no es válido, enviamos al login para que se loguee con otra configuración. Le pasaremos un error.
                     $params=[
                         "userName"=> $_POST['usuario'],
                         "error"=> $user["error"]
@@ -114,6 +119,7 @@ class IndexController extends BaseController{
                     parent::redirect("index","index",$params);
                 }  
             }else{
+                //Si los campos están vacios, se enviará un error y se redirige al login. 
                 $params=[
                     "userName"=> $_POST['usuario'],
                     "error"=>"empty"
@@ -125,7 +131,7 @@ class IndexController extends BaseController{
     }
 
     /**
-     * Cierra la sesión y elimina la cookie de mantenerSesion.
+     * Cierra la sesión y elimina las cookies de mantenerSesion.
      * Luego, redirige al index.php
      *
      * @return void

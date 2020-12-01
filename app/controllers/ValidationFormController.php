@@ -64,8 +64,12 @@ function filtrado($datos){
 }
 
 
-
-// Verificamos si todos los campos han sido validados
+ 
+/**
+ * Verificamos si todos los campos han sido validados
+ *
+ * @return void
+ */
 function validate() {
 
   // Definimos e inicializamos el array de errores y las variables asociadas a cada campo
@@ -83,13 +87,13 @@ function validate() {
 
 
   $errors=[];
-
+  //Cuando se le de a enviar, se verificará cada campo.
     if (isset($_POST["submit"])) {
 
         $nif=filtrado($_POST["nif"]);
 
         if (empty($nif) || (!preg_match("/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i",$nif)) || !comprobarNif($nif)) {
-          $errors["nif"] = "Nif no válido. Asegúsrese de que el nif tiene un tamaño de 9 caracteres siendo los 8 primeros números y el último una letra divisible entre 23.";   
+          $errors["nif"] = "Nif no válido. Asegúrate de que el nif tiene un tamaño de 9 caracteres siendo los 8 primeros números y el último una letra divisible entre 23.";   
         } 
       
         $nombre=filtrado($_POST["nombre"]);
@@ -105,13 +109,13 @@ function validate() {
         //Si no está logado. Control contras, imagen y login
         if(!isset($_SESSION["usuario"])){
             if (!isset($_FILES["imagen"]) || $_FILES["imagen"]["error"] != 0) {
-              $errors["imagen"] = "Imagen no válida. Vacio";
+              $errors["imagen"] = "Imagen no válida. Asegúrate de no dejar éste campo vacío.";
             }
 
             if (!empty($_POST["email"])) {
               $email=filtrado($_POST["email"]);
             }else{
-              $errors["email"] = "Email no válido. No puede estar el campo vacío.";
+              $errors["email"] = "Email no válido. No puede estar el campo vacío, será tu 'login'.";
             }
 
             if (empty($_POST["passwordMod"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["passwordMod"]))) {
@@ -145,7 +149,7 @@ function validate() {
         
 
         if (empty($_POST["direccion"])) {
-          $errors["direccion"] = "Dirección no válida. Vacio.";
+          $errors["direccion"] = "Dirección no válida. No puedes dejar este campo vacío.";
         }
     }
   return $errors;

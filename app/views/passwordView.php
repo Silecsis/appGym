@@ -21,9 +21,9 @@
             if (isset($_GET["password"])){
                 echo '<div class="alert alert-success" style="margin-top:5px;"> La nueva contraseña es ' . $_GET["password"] . '.<br/> </div>';
             }else if(isset($_GET["error"]) && $_GET["error"]=="campo"){
-              echo '<div class="alert alert-danger" style="margin-top:5px;"> El login/email introducino no figura en nuestra base de datos.<br/> </div>';
+              echo '<div class="alert alert-danger" style="margin-top:5px;"> El email introducino no figura en nuestra base de datos.<br/> </div>';
             }else if(isset($_GET["error"]) && $_GET["error"]=="unexpected"){
-
+              echo '<div class="alert alert-danger" style="margin-top:5px;"> Se ha producido un error inesperado.<br/> </div>';
             }
           ?> 
         </div>

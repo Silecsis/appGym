@@ -40,9 +40,9 @@
               if ($_GET["error"]=="authRequired"){
                  echo '<div class="alert alert-danger" style="margin-top:5px;"> Debes estar logueado para acceder a este sitio.<br/> </div>';
                 }else if($_GET["error"]=="notFound"){
-                  echo '<div class="alert alert-danger" style="margin-top:5px;"> Su nombre de usuario y/o contraseña no se encuentra en nuestra base de datos.<br/> </div>';
+                  echo '<div class="alert alert-danger" style="margin-top:5px;"> Tu nombre de usuario (email )y/o contraseña no se encuentra en nuestra base de datos.<br/> </div>';
                 }else if($_GET["error"]=="empty"){
-                  echo '<div class="alert alert-danger" style="margin-top:5px;"> No puede dejar los campos de email y/o contraseña vacíos.<br/> </div>';
+                  echo '<div class="alert alert-danger" style="margin-top:5px;"> No puedes dejar los campos de email y/o contraseña vacíos.<br/> </div>';
                 }else if($_GET["error"]=="deactivated"){
                   echo '<div class="alert alert-danger" style="margin-top:5px;"> Tienes el usuario desactivado. Comunícate con algún administrador..<br/> </div>';
                 }

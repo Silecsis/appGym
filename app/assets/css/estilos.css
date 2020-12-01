@@ -56,8 +56,12 @@ p.horaIni{
     margin-top: 4px;
 }
 
-a.sesion{
+a.sesion,button.adminUser, a.adminUser {
     font-family: 'Castoro', serif;
+}
+
+div.adminUser{
+    text-align: left;
 }
 /*------FIN NAV BAR------*/
 
@@ -143,5 +147,13 @@ div.passwordForg{
     font-weight: bold;
 }
 
-button.btRecu{
+/*----------------------------------listUserView.php------------------------------*/
+div.listUser{
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+table.tablaListUser{
+    margin-left: auto;
+    margin-left: auto;
 }

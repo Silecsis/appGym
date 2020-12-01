@@ -10,7 +10,7 @@ require_once MODELS_FOLDER . 'UserModel.php';
 
 
 /**
- * 
+ * Es el controler de la vista PasswordView.php (la de "olvidé mi contraseña")
  */
 class PasswordController extends BaseController{
 
@@ -30,7 +30,8 @@ class PasswordController extends BaseController{
     }
 
     /**
-     * Recuperará la contraseña-
+     * Recuperará la contraseña mediante el email.
+     * CORREGIR: ENVIAR MENSAJE A SU EMAIL EN VEZ DE QUE APAREZCA EN PANTALLA.
      *
      * @return void
      */
@@ -85,24 +86,30 @@ class PasswordController extends BaseController{
                 //     "sendPassword"=> true,
                 //     "error"=>false
                 // ];
+
+                //Si el user está en la bd, se genera una contraseña nueva aleatoria.
                  $passwordNew=uniqid("",true); //Para contra aleatoria.
+                 //Luego se cambia esta contraseña en la bd.
                  $changePassword = $userModel -> changePassword($_POST["emailUser"],$passwordNew );  
                 if($changePassword["correct"]){
+                    //Si el cambio es correcto, le pasamos la contra nueva al usuario.
                     $params=[
                         "password" => $passwordNew
                     ];
                 }else{
+                    //Si no, se le avisa mediante error.
                     $params=[
                         "error"=>"unexpected"
                     ];
                 }
 
             }else{
+                //Si el user no es correcto, se manda un error.
                 $params=[
                     "error"=>$user["error"]
                 ];
             }
-
+            //En cualquier caso, se le enviará a la vista de "Olvidé mi contraseña"
             parent::redirect("password","forgoted",$params);
         }
     }

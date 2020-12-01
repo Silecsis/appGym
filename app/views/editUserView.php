@@ -1,3 +1,5 @@
+<!--Vista de "editar usuario"  estando logueado y de "registro."-->
+
 <div class="formEdit">
     <div class="container cuerpo text-center">	
         <p><h2> Datos de usuario:</h2></p>
@@ -9,9 +11,9 @@
         <!-- <//?php if (isset($_POST["submit"]) && (count($errors) == 0)) { valoresfrm(); } ?> -->
     </div>
     <div class="container formContainer">
-        <!--MODIFICAR ENVIO DE DATOS-->
+        <!--Se recarga a sí misma.-->
         <form action="" method="POST" enctype="multipart/form-data" class="formEdit">
-
+        
             <label for="nif">Nif:
                 <input type="text" name="nif" class="form-control"  <?php rememberValue($_POST["nif"],$user->nif) ?>/> 
                 <?php echo mostrar_error($errors, "nif"); ?>    
@@ -79,8 +81,15 @@
                 <input type="file" name="imagen" class="form-control" <?php rememberValue($_POST["imagen"],$user->imagen) ?>/> 
                 <?php echo mostrar_error($errors, "imagen"); ?>                         
             </label>
+            <div class="text-right">
             <br/>
-            <input type="submit" value="Enviar" name="submit" class="btn btn-success" />
+            <?php if(isset($_SESSION["usuario"])){?>
+                <input type="submit" value="Editar perfil" name="submit" class="btn btn-primary" />
+            <?php }else{?>
+                <input type="submit" value="Registrarme" name="submit" class="btn btn-primary"/>
+                <label><button type="button" class="btn btn-secondary recuperarContra" onclick="location.href='index.php?controller=index&action=index'">Volver a "Login de usuario"</button></label>  
+            <?php }?>
+            </div>
         </form>
     </div>
 </div>
