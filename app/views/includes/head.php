@@ -1,3 +1,5 @@
+ <!--Cabecera de la pág que se está usando. Común en todas las vistas.-->
+ 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gimnasio Lavanda</title>

@@ -1,3 +1,5 @@
+  <!--Aquí se mostrará el menú una vez logueado. Común en todas las vistas.
+    Tiene diferencias si es admin o si es socio-->  
     <header>
         <h1>Gimnasio Lavanda</h1>
 
@@ -11,8 +13,8 @@
                                 Administrar usuarios
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item adminUser"  href="index.php?controller=user&action=listUser">Listar todos</a><!--Lista de usuarios-->
-                                <a class="dropdown-item adminUser"  href="index.php?controller=user&action=newUser">Nuevo usuario</a><!--Registrar nuevo user-->
+                                <a class="dropdown-item adminUser"  href="index.php?controller=adminUser&action=listUser">Listar todos</a><!--Lista de usuarios-->
+                                <a class="dropdown-item adminUser"  href="index.php?controller=adminUser&action=createUser">Nuevo usuario</a><!--Registrar nuevo user-->
                             </div>
                         </div>
                     <?php } ?>

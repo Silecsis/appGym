@@ -1,19 +1,20 @@
-<!--Vista de "editar usuario"  estando logueado y de "registro."-->
+<!--Vista de "editar usuario"  estando logueado y de "registro".-->
 
 <div class="formEdit">
     <div class="container cuerpo text-center">	
         <p><h2> Datos de usuario:</h2></p>
-        <?php
-            if(isset($errors) && count($errors) == 0){
-                echo '<div class="alert alert-success" style="margin-top:5px;"> Formulario validado correctamente!! :)</div>'; 
-            }  
-        ?>
-        <!-- <//?php if (isset($_POST["submit"]) && (count($errors) == 0)) { valoresfrm(); } ?> -->
     </div>
     <div class="container formContainer">
         <!--Se recarga a sí misma.-->
         <form action="" method="POST" enctype="multipart/form-data" class="formEdit">
-        
+            <div class="text-center">
+                <?php 
+                    if (isset($correct) && $correct){
+
+                        echo '<div class="alert alert-success" style="margin-top:5px;"> Los cambios han sido realizados correctamente. </div>';
+                    }
+                ?> 
+            </div>
             <label for="nif">Nif:
                 <input type="text" name="nif" class="form-control"  <?php rememberValue($_POST["nif"],$user->nif) ?>/> 
                 <?php echo mostrar_error($errors, "nif"); ?>    

@@ -119,10 +119,11 @@ class UserController extends BaseController
                }
                                                    
             $editCorrect=$userModel-> editUser($_POST["nif"], $_POST["nombre"], $_POST["apellidos"],  $_POST["passwordMod"], $_POST["telefono"], $_POST["direccion"], $fileName, $_SESSION['usuario']["id"]);
-               if(isset($fileName) && $fileName!=""){
-                  $_SESSION["usuario"]["img"]=$fileName;
-               }
-
+               
+            if(isset($fileName) && $fileName!=""){
+               $_SESSION["usuario"]["img"]=$fileName;
+            }
+            
             //Cargamos la vista con los aprámetros de los errores en caso de que hallan.
             $this->authView("editUser","user","index",$editCorrect);
          }
@@ -144,41 +145,5 @@ class UserController extends BaseController
       } 
    }
 
-
-   /**
-    * Lista los usuarios.
-    * Solo lo hace el rol de admin.
-    *
-    * @return void
-    */
-   public function listUser()
-   {
-      $userModel=new UserModel();
-      $user=$userModel->listUserDatas();
-
-      if($user["correct"]){
-         $params=[
-            "data"=>$user
-         ];
-      }else{
-         $params=[
-            "error"=>"unexpected"
-         ];
-      }
-
-      $this->view->adminAuthShow("listUser",$params);
-   }
-
-
-   /**
-    * Crea un nuevo usuario.
-    * Solo lo hace el rol de admin.
-    *
-    * @return void
-    */
-   public function newUser()
-   {
-      $this->view->adminAuthShow("newUser");
-   }
 }
 ?>

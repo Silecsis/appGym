@@ -1,14 +1,19 @@
 <?php
 
 /**
- * Script que muestra en una tabla los valores enviados por el usuario a través 
- * del formulario utilizando el método POST
+ * Script que controla la validación de formularios.
  */
 
 
 
-// Función que muestra el mensaje de error bajo el campo que no ha superado
-// el proceso de validación
+/**
+ * Función que muestra el mensaje de error bajo el campo que no ha superado 
+ * el proceso de validación
+ *
+ * @param array $errors array que contendrá los errores
+ * @param string $campo será el name de la etiqueta del html.
+ * @return void devuelve el error.
+ */
 function mostrar_error(&$errors, $campo) {
   $alert = "";
   
@@ -21,7 +26,7 @@ function mostrar_error(&$errors, $campo) {
 /**
  * Comprueba que el nif sea correcto.
  *
- * @param [type] $cadena será el nif
+ * @param string $cadena será el nif
  * @return void
  */
 function comprobarNif($cadena)
@@ -68,7 +73,7 @@ function filtrado($datos){
 /**
  * Verificamos si todos los campos han sido validados
  *
- * @return void
+ * @return array devuelve el array de errores.
  */
 function validate() {
 
@@ -121,6 +126,18 @@ function validate() {
             if (empty($_POST["passwordMod"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["passwordMod"]))) {
               $errors["passwordMod"] = "Contraseña no válida.  Asegúrese de que tenga tener una longitud mínima de 8 caracteres y contener letras mayúsculas, minúsculas, números y caracteres especiales.";
             }
+        }else if(isset($_SESSION["usuario"]["rol_id"]) && $_SESSION["usuario"]["rol_id"]==1 && !isset($_GET["id"])){
+            // Si está logueado con el rol de admin, pero en la barra no hay id, no deberá controlar el error de contraseña. 
+            if (!isset($_FILES["imagen"]) || $_FILES["imagen"]["error"] != 0) {
+              $errors["imagen"] = "Imagen no válida. Asegúrate de no dejar éste campo vacío.";
+            }
+
+            if (!empty($_POST["email"])) {
+              $email=filtrado($_POST["email"]);
+            }else{
+              $errors["email"] = "Email no válido. No puede estar el campo vacío, será tu 'login'.";
+            }
+
         }else{
             //Para modificar contra. (passwordMod)
             $passwordAct=$_SESSION["usuario"]["password"]; //La contra actual.

@@ -1,4 +1,4 @@
-
+<!--Vista de "olvidé mi contraseña"-->
 <div class="passwordForg">	
     <div class="container">	
       <p><h2 class="h2Passw"> "Olvidé mi contraseña"</h2></p>
@@ -18,12 +18,25 @@
         <br/>
         <div>
           <?php 
-            if (isset($_GET["password"])){
-                echo '<div class="alert alert-success" style="margin-top:5px;"> La nueva contraseña es ' . $_GET["password"] . '.<br/> </div>';
+            if (isset($_GET["sendMail"]) && $_GET["sendMail"]){
+
+            ?>
+
+              <div class="alert alert-success" style="margin-top:5px;"> 
+                La nueva contraseña se ha enviado correctamente.
+                <br/> 
+                Para no poner la contraseña del gmail utilizado para enviar las contraseñas olvidadas, se ha utilizado un servicio de email falso
+                cuya url es: <a href="https://ethereal.email/create">https://ethereal.email/create</a>. El usuario y contraseña de este servicio está en la documentación.
+              </div>
+
+            <?php
+
             }else if(isset($_GET["error"]) && $_GET["error"]=="campo"){
               echo '<div class="alert alert-danger" style="margin-top:5px;"> El email introducino no figura en nuestra base de datos.<br/> </div>';
+
             }else if(isset($_GET["error"]) && $_GET["error"]=="unexpected"){
               echo '<div class="alert alert-danger" style="margin-top:5px;"> Se ha producido un error inesperado.<br/> </div>';
+
             }
           ?> 
         </div>

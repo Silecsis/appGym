@@ -1,5 +1,5 @@
 <!--
-Será la plantilla de las vistas que incluyen el header y footer de include y el body de las vistas inheaderiduales.
+Será la plantilla de las vistas que incluyen el header, header y footer de include y el body individuales de las vistas.
 -->
 <!DOCTYPE html>
 <html lang="es">

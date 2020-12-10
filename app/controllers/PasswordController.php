@@ -4,9 +4,10 @@
  * Incluimos los modelos que necesite este controlador
  */
 require_once MODELS_FOLDER . 'UserModel.php';
-// use PHPMailer\PHPMailer\PHPMailer;
-// use PHPMailer\PHPMailer\SMTP;
-// use PHPMailer\PHPMailer\Exception;
+//Cargamos los ficheros necesarios
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 
 /**
@@ -31,77 +32,88 @@ class PasswordController extends BaseController{
 
     /**
      * Recuperará la contraseña mediante el email.
-     * CORREGIR: ENVIAR MENSAJE A SU EMAIL EN VEZ DE QUE APAREZCA EN PANTALLA.
+     * Utilización de phpmailer.
+     * 
+     * NOTA: Para no colocar mi correo y contraseña reales, se ha utilizado un servicio falso de email.
+     * Se puede ver si se ha enviado correctamente accediendo a la bandeja de mensajes enviados del enlace 
+     *  · https://ethereal.email/create 
+     * 
+     * con el usuario: anissa.jenkins@ethereal.email
+     * y contraseña: uUTxyuGQJuMkpJQGU5.
      *
      * @return void
      */
     public function recuperate()
     {
-        // require_once 'phpmailer/Exception.php';
-        // require_once 'phpmailer/PHPMailer.php';
-        // require_once 'phpmailer/SMTP.php';
+        //Cargamos los ficheros.
+        require_once 'phpmailer/Exception.php';
+        require_once 'phpmailer/PHPMailer.php';
+        require_once 'phpmailer/SMTP.php';
 
         if(isset($_POST['submit'])){
+            //Si hemos pulsado el botón de enviar:
+
+            $params=[
+                "error"=>"",
+                "sendMail" => false
+            ];
 
             $userModel=new UserModel();
+
+            //Buscamos el email.
             $user=$userModel->getByEmail($_POST["emailUser"]);
 
             if($user["correct"]){
-                // $mail = new PHPMailer(true);
+                try {
+                    //Si el user está en la bd, se genera una contraseña nueva aleatoria.
+                    $passwordNew=uniqid("",true); 
 
-                // try {
-                //     //Server settings
-                //     $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
-                //     $mail->isSMTP();                                            // Send using SMTP
-                //     $mail->Host       = 'mail.smtpbucket.com';                    // Set the SMTP server to send through
-                //     $mail->SMTPAuth   = false;                                   // Enable SMTP authentication
-                //     //$mail->Username   = 'user@example.com';                     // SMTP username
-                //     //$mail->Password   = 'secret';                               // SMTP password
-                //     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-                //     $mail->Port       = 8025;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+                    //Luego se cambia esta contraseña en la bd.
+                    $changePassword = $userModel -> changePassword($_POST["emailUser"],$passwordNew );  
 
-                //     //Recipients
-                //     $mail->setFrom('appgym@gmail.com', 'APPGYM');
-                //     $mail->addAddress($_POST["emailUser"]);     // Add a recipient
-                //     //$mail->addReplyTo('info@example.com', 'Information');
-                //     //$mail->addCC('cc@example.com');
-                //     //$mail->addBCC('bcc@example.com');
+
+                    //Servicio falso de email: https://ethereal.email/create
+
+                    //Ahora configuramos el $mail con los siguientes datos:
+
+                    $mail = new PHPMailer(true);
+                    $mail->isSMTP();
+                    $mail->Host = 'smtp.ethereal.email'; //Se deberá modificar según la extensión del Username (ejemplo: para gmail: smtp.gmail.com)
+                    $mail->SMTPAuth = true;
+                    $mail->Username = 'anissa.jenkins@ethereal.email';//Se deberá modificar por el email del cual se quiera enviar los correos.
+                    $mail->Password = 'uUTxyuGQJuMkpJQGU5'; //Se deberá modificar por la contraseña del email del cual se quiera enviar los correos.
+                    $mail->SMTPSecure = 'tls';
+                    $mail->Port = 587;
+
+                    //Recipients
+                    $mail->setFrom('anissa.jenkins@ethereal.email', 'APPGYM');//Se deberá modificar por el email del cual se quiera enviar los correos.
+                    $mail->addAddress($_POST["emailUser"]); 
+
+                    // Content
+                    $mail->isHTML(false);                                  
+                    $mail->Subject = 'APPGYM: Recuperar clave de seguridad';
+                    $mail->Body    = 'Tu passsword es: '.$passwordNew;
+                    $mail->send();
 
                     
+                    if($changePassword["correct"]){
+                        //Si el cambio es correcto, le pasamos la contra nueva al usuario.
+                        $params=[
+                            "sendMail" => true
+                        ];
+                    }else{
+                        //Si no, se le avisa mediante error.
+                        $params=[
+                            "error"=>"unexpected"
+                        ];
+                    }
 
-                //     // Content
-                //     $mail->isHTML(false);                                  // Set email format to HTML
-                //     $mail->Subject = 'APPGYM: Recuperar contraseña';
-                //     $mail->Body    = 'Tu passsword es: ';
-                //     //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
-                //     $mail->send();
-                //     echo 'Message has been sent';
-                // } catch (Exception $e) {
-                //     echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-                // }
-
-
-                // $params=[
-                //     "sendPassword"=> true,
-                //     "error"=>false
-                // ];
-
-                //Si el user está en la bd, se genera una contraseña nueva aleatoria.
-                 $passwordNew=uniqid("",true); //Para contra aleatoria.
-                 //Luego se cambia esta contraseña en la bd.
-                 $changePassword = $userModel -> changePassword($_POST["emailUser"],$passwordNew );  
-                if($changePassword["correct"]){
-                    //Si el cambio es correcto, le pasamos la contra nueva al usuario.
-                    $params=[
-                        "password" => $passwordNew
-                    ];
-                }else{
-                    //Si no, se le avisa mediante error.
-                    $params=[
+                } catch (Exception $e) {
+                   //Si no, se le avisa mediante error.
+                   $params=[
                         "error"=>"unexpected"
                     ];
-                }
+                }  
 
             }else{
                 //Si el user no es correcto, se manda un error.

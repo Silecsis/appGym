@@ -26,5 +26,6 @@ define('DBHOST', 'localhost');
 define('DBNAME', 'appgym');
 define('DBUSER', 'root');
 define('DBPASS', '');
+define('PAGE_SIZE',10);//Paginación (max de cada pagina)
 
 ?>

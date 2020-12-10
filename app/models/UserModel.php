@@ -141,16 +141,17 @@ class UserModel extends BaseModel
    }
 
 
-  /**
-   * Para logar al usuario mediante la base de datos.
+   
+   /**
+    * Para logar al usuario mediante la base de datos.
     * Devuelve los datos del usuario logado si los datos son correctos con la base de datos.
     *
-    * @param [type] $email Usuario de la base de datos mediante el email.
-    * @param [type] $password password del usuario de la base ded atos.
-    * @return si el usuario es corecto o, en caso contrario, un error.
-    */
-    public function getByCredentials($email,$password)
-    {
+    * @param string $email Usuario de la base de datos mediante el email.
+    * @param string $password password del usuario de la base ded atos.
+    * @return array si el usuario es corecto o, en caso contrario, un error.
+    */ 
+   public function getByCredentials($email,$password)
+   {
        //PASSWORD CODIFICADO.
  
        //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
@@ -192,27 +193,28 @@ class UserModel extends BaseModel
        }
        
        return $result;//Devolvemos el resultado sea el error o el registro.
-    }
+   }
 
 
     /**
-     * Actualiza al usuario de la bd.
+     * Actualiza al usuario de la bd desde el perfil del usuario.
+     * Para socios y admin.
      *
-     * @param [type] $nif
-     * @param [type] $nombre
-     * @param [type] $apellidos
-     * @param [type] $password
-     * @param [type] $telefono
-     * @param [type] $direccion
-     * @param [type] $imagen
-     * @param [type] $id
-     * @return void
+     * @param string $nif
+     * @param string $nombre
+     * @param string $apellidos
+     * @param string $password
+     * @param integer $telefono
+     * @param string $direccion
+     * @param string $imagen
+     * @param integer $id
+     * @return array devuelve el resultado de la operación
      */
     public function editUser($nif, $nombre, $apellidos, $password, $telefono, $direccion, $imagen, $id)
     {
         //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
         $return = [
-         "correcto" => FALSE,
+         "correct" => FALSE,
          "error" => NULL
          ];
 
@@ -240,7 +242,7 @@ class UserModel extends BaseModel
          //Supervisamos si la inserción se realizó correctamente... 
          if ($query) {
             $_SESSION["usuario"]["password"]=MD5($password);
-            $return["correcto"] = TRUE;
+            $return["correct"] = TRUE;
          } 
 
       }catch (PDOException $ex) {
@@ -252,8 +254,8 @@ class UserModel extends BaseModel
     /**
      * Encuentra al user mediante el email si es correcto.
      *
-     * @param [type] $email
-     * @return void
+     * @param string $email
+     * @return array devuelve el resultado de la operación
      */
     public function getByEmail($email)
     {
@@ -283,19 +285,20 @@ class UserModel extends BaseModel
       return $result;//Devolvemos el resultado sea el error o el registro.
     }
 
-   /**
-    * Crea el user.
-    *
-    * @param [type] $nif
-    * @param [type] $nombre
-    * @param [type] $apellidos
-    * @param [type] $email
-    * @param [type] $password
-    * @param [type] $telefono
-    * @param [type] $direccion
-    * @param [type] $imagen
-    * @return void
-    */
+   
+    /**
+     * Crea el user.
+     *
+     * @param string $nif
+     * @param string $nombre
+     * @param string $apellidos
+     * @param string $email
+     * @param string $password
+     * @param integer $telefono
+     * @param string $direccion
+     * @param string $imagen
+     * @return array devuelve el resultado de la operación
+     */
     public function createUser($nif, $nombre, $apellidos, $email,$password,$telefono, $direccion, $imagen)
     {
         //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
@@ -337,9 +340,9 @@ class UserModel extends BaseModel
     /**
      * Cambiará la contraseña en la bd.
      *
-     * @param [type] $email
-     * @param [type] $password
-     * @return void
+     * @param string $email
+     * @param string $password
+     * @return array devuelve el resultado de la operación
      */
     public function changePassword($email,$password)
     {
@@ -367,14 +370,24 @@ class UserModel extends BaseModel
          return $return; 
     }
 
+    //----------------------------------Acciones de Admin-----------------------------------
 
     /**
      * Lista los usuarios.
+     * Acción para administrador.
      *
-     * @param [type] $id
-     * @return void
+     * @param string $nif
+     * @param string $nombre
+     * @param string $apellidos
+     * @param string $email
+     * @param string $telefono
+     * @param string $direccion
+     * @param string $estado
+     * @param string $rol
+     * @param integer $page
+     * @return void Devuelve una serie de parametros que será los usurios, si es correcto y si tiene errores.
      */
-    public function listUserDatas()
+    public function listUserDatas($nif="",$nombre="",$apellidos="",$email="", $telefono="", $direccion="", $estado="",$rol="",$page=0)
     {
       $return = [
          "correct" => FALSE,
@@ -384,23 +397,234 @@ class UserModel extends BaseModel
       
       try {
          $sql="SELECT * FROM usuario" ; 
+
+         $sql_count="SELECT count(id) as count FROM usuario" ;
+
+         if($nif!="" || $nombre!="" || $apellidos!="" || $email!="" || $telefono!="" || $direccion!="" || $estado!="" || $rol!=""){
+            $sql=$sql." WHERE ";
+            $sql_count=$sql_count." WHERE ";//Para contar elementos que hay sin paginacion
+
+            $conditions=[];
+
+            if($nif!=""){
+               array_push($conditions,"nif like '%".$nif."%'");
+            }
+
+            if($nombre!=""){
+               array_push($conditions,"nombre like '%".$nombre."%'");
+            }
+
+            if($apellidos!=""){
+               array_push($conditions,"apellidos like '%".$apellidos."%'");
+            }
+
+            if($email!=""){
+               array_push($conditions,"email like '%".$email."%'");
+            }
+
+            if($telefono!=""){
+               array_push($conditions,"telefono = '".$telefono."'");
+            }
+
+            if($direccion!=""){
+               array_push($conditions,"direccion like '%".$direccion."%'");
+            }
+
+            if($estado!=""){
+               array_push($conditions,"estado = '".$estado."'");
+            }
+
+            if($rol!=""){
+               array_push($conditions,"rol_id = '".$rol."'");
+            }
+
+            $sql=$sql.join(" and ",$conditions);
+            $sql_count=$sql_count.join(" and ",$conditions);//Para contar elementos que hay sin paginacion
+         }
             
+         //Para paginacioon:
+         $sql=$sql." LIMIT ".PAGE_SIZE." OFFSET ".(PAGE_SIZE * $page);//* page para que se salte los elementos
          $query = $this->db->query($sql);
 
+         $query_count=$this->db->query($sql_count);//Para contar elementos que hay sin paginacion
+
          //Supervisamos que la consulta se realizó correctamente... 
-         if ($query) {
+         if ($query && $query_count) {
              $row = $query;
+             $count=$query_count->fetchObject()->count;
+
             foreach ($row as $r) {
                $return["correct"] = TRUE;
                $return["users"] []= $r;
             }
-           
+            
+            $return["count"]=$count;
          } 
       } catch (PDOException $ex) {
          $return["error"] = $ex->getMessage();
-       } 
+      } 
 
       return $return;
+    }
+
+
+    /**
+     * Elimina al usuario de la bd mediante ID.
+     * Acción para administrador.
+     *
+     * @param integer $id
+     * @return void Un boolean que indica si ha sido correcta la eliminación o no.
+     */
+    public function deleteUser($id)
+    {
+      $return = [
+         "correct" => FALSE,
+         "error" => NULL
+      ];
+
+      //Si hemos recibido el id y es un número realizamos el borrado...
+      if ($id && is_numeric($id)) {
+         try {
+
+            $sql = "DELETE FROM usuario WHERE id = ".$id;
+            $query = $this->db->query($sql);
+
+            //Supervisamos si la eliminación se realizó correctamente... 
+            if ($query) {
+               $return["correct"] = TRUE;
+            } 
+
+         } catch (PDOException $ex) {
+            $return["error"] = $ex->getMessage();
+         }
+      } else {
+         $return["correct"] = FALSE;
+      }
+
+      return $return;
+    }
+
+    /**
+     * Edita el usuario desde la lista de usuarios.
+     * Solo podrá editarlo el admin.
+     *
+     * @param string $nif
+     * @param string $nombre
+     * @param string $apellidos
+     * @param string $email
+     * @param string $password
+     * @param integer $telefono
+     * @param string $direccion
+     * @param integer $estado
+     * @param string $imagen
+     * @param integer $rol_id
+     * @param integer $id
+     * @return array devuelve el resultado de la operación
+     */
+    public function adminEditUser($nif, $nombre, $apellidos, $email, $password, $telefono, $direccion, $estado, $imagen,$rol_id, $id)
+    {
+       //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
+       $return = [
+         "correct" => FALSE,
+         "errors" => []
+         ];
+
+      try {
+         //sentencia sql que edita al usuario.
+         $sql="UPDATE usuario SET 
+            nif = '$nif', nombre = '$nombre', apellidos = '$apellidos', telefono = '$telefono', 
+            direccion = '$direccion', estado = '$estado', rol_id = '$rol_id'" ;
+
+         if (isset($password) && $password != ""){
+            //Si cambia la contraseña, se incluye en el sql.
+            $sql=$sql . ", password = MD5('$password')";
+         } 
+
+         if (isset($imagen) && $imagen != ""){
+            //Si cambia la imagen, se incluye en el sql
+            $sql=$sql . ", imagen = '$imagen'";
+         }
+
+         if(isset($email)){
+            $userList= $this->getBy("email",$email);
+
+            if(count($userList) != 0 && $email !== $userList[0]->email){
+               //["email"] para que se meta en la parte de errores de email.
+               //Se realizará cuando incluya un email que ya existe en la bd
+               $return["errors"]["email"] = "Email no disponible.";
+            }else{
+               $sql=$sql . ", email = '$email'";
+            }
+         }
+
+
+         //Por ultimo, insertamos el dato único que será el id para más seguridad que el email.
+         $sql=$sql . " WHERE id = '$id'";
+         
+         $query = $this->db->query($sql);
       
+         //Supervisamos si la inserción se realizó correctamente... 
+         if ($query) {
+            $return["correct"] = TRUE;
+         } 
+
+      }catch (PDOException $ex) {
+         $return["errors"]["db"] = $ex->getMessage();
+      }
+      return $return;
+    }
+
+    /**
+     * Crea un usuario. 
+     * Operación que solo puede realizar un admin.
+     * Añade los valores "estado" y "rol_id"
+     *
+     * @param string $nif
+     * @param string $nombre
+     * @param string $apellidos
+     * @param string $email
+     * @param string $password
+     * @param integer $telefono
+     * @param string $direccion
+     * @param integer $estado
+     * @param string $imagen
+     * @param integer $rol_id
+     * @return array devuelve el resultado de la operación
+     */
+    public function adminCreateUser($nif, $nombre, $apellidos, $email,$password,$telefono, $direccion,$estado, $imagen,$rol_id)
+    {
+       //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
+       $return = [
+         "correct" => FALSE,
+         "errors" => []
+         ];
+
+      try {
+         $userList= $this->getBy("email",$email);
+
+         if(isset($userList) && count($userList) != 0){
+            //["email"] para que se meta en la parte de errores de email.
+            //Se realizará cuando incluya un email que ya existe en la bd
+            $return["errors"]["email"] = "Email no disponible.";
+         }else{
+            //Sino, creamos el user y lo incluimos en la bd.
+            $sql="INSERT INTO usuario 
+               (nif, nombre, apellidos, email, password,telefono, direccion, estado, imagen, rol_id) 
+                  VALUES 
+                  ('$nif', '$nombre', '$apellidos','$email',  MD5('$password'),  '$telefono', '$direccion','$estado','$imagen', '$rol_id')" ;
+
+            $query = $this->db->query($sql);
+
+         
+            //Supervisamos si la inserción se realizó correctamente... 
+            if ($query) {
+               $return["correct"] = TRUE;
+            } 
+         }
+      }catch (PDOException $ex) {
+         $return["errors"]["generic"] = $ex->getMessage();
+      }
+
+      return $return;
     }
 }
