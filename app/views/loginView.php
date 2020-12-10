@@ -50,7 +50,7 @@
 
           ?> 
           <br>
-          <input type="submit" value="Enviar" name="submit" class="btn btn-primary" />
+          <input type="submit" value="Entrar" name="submit" class="btn btn-primary" />
           <button type="button" class="btn btn-primary" onclick="location.href='index.php?controller=user&action=registrer'">Registrarme</button>
         </div>
       </form>

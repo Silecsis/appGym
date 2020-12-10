@@ -387,8 +387,9 @@ class UserModel extends BaseModel
      * @param integer $page
      * @return void Devuelve una serie de parametros que será los usurios, si es correcto y si tiene errores.
      */
-    public function listUserDatas($nif="",$nombre="",$apellidos="",$email="", $telefono="", $direccion="", $estado="",$rol="",$page=0)
+    public function listUserDatas($page=1,$nif="",$nombre="",$apellidos="",$email="", $telefono="", $direccion="", $estado="",$rol="")
     {
+      $page=$page-1;
       $return = [
          "correct" => FALSE,
          "users" => [],
@@ -442,19 +443,31 @@ class UserModel extends BaseModel
             $sql_count=$sql_count.join(" and ",$conditions);//Para contar elementos que hay sin paginacion
          }
             
-         //Para paginacioon:
-         $sql=$sql." LIMIT ".PAGE_SIZE." OFFSET ".(PAGE_SIZE * $page);//* page para que se salte los elementos
-         $query = $this->db->query($sql);
+         
 
          $query_count=$this->db->query($sql_count);//Para contar elementos que hay sin paginacion
 
          //Supervisamos que la consulta se realizó correctamente... 
-         if ($query && $query_count) {
+         if ($query_count) {
+            $count=$query_count->fetchObject()->count;
+
+            //Para paginación:
+            if($page * PAGE_SIZE >= $count){
+
+               if($count%PAGE_SIZE==0){
+                  $page= ($count/PAGE_SIZE) - 1;
+               }else{
+                  $page= floor($count/PAGE_SIZE);
+               }
+            }
+
+            $sql=$sql." LIMIT ".PAGE_SIZE." OFFSET ".(PAGE_SIZE * $page);//* page para que se salte los elementos
+            $query = $this->db->query($sql);
+
              $row = $query;
-             $count=$query_count->fetchObject()->count;
+             $return["correct"] = TRUE;
 
             foreach ($row as $r) {
-               $return["correct"] = TRUE;
                $return["users"] []= $r;
             }
             
@@ -626,5 +639,39 @@ class UserModel extends BaseModel
       }
 
       return $return;
+    }
+
+    /**
+     * Cambia el estado del usuario en la base de datos.
+     * Solo lo realiza los administradores.
+     *
+     * @param integer $id
+     * @param integer $estado
+     * @return void
+     */
+    public function changeStatus($estado, $id)
+    {
+       //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
+       $return = [
+         "correct" => FALSE,
+         "error" => NULL
+         ];
+
+         try {
+            $sql="UPDATE usuario SET 
+                estado = '$estado' 
+                  WHERE id = '$id'" ; 
+            
+            $query = $this->db->query($sql);
+         
+            //Supervisamos si la inserción se realizó correctamente... 
+            if ($query) {
+               $return["correct"] = TRUE;
+            } 
+
+         }catch (PDOException $ex) {
+            $return["error"] = $ex->getMessage();
+         }
+         return $return;
     }
 }

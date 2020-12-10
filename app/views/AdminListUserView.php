@@ -13,6 +13,7 @@
                 <!--Daba fallos el action, por eso lo he metido con estos botones.-->
                 <input type="hidden" name="controller" value="adminUser"/>
                 <input type="hidden" name="action" value="listUser"/>
+                <input type="hidden" name="pagina" value="<?php echo $_GET["pagina"] ?>"/>
 
                 <label class="blu">NIF: 
                     <input name="nif" type="text" class="blu" <?php rememberValue($_GET["nif"],$vacio) ?>/>
@@ -52,9 +53,30 @@
             </form>
         </fieldset>
     </div>
-    
-
     <div class="tablaListUser">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link pag" href="<?php echo $url."&?"?>" aria-label="Previous"><!--Para ir a la página anterior, le restamos 1 a la pagina recibida por el get-->
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Anterior</span>
+                    </a>
+                </li>
+
+                <?php for ($i=1;$i<=$paginas;$i++): ?>
+                <li class="page-item">
+                    <a class="page-link pag" href="index.php?controller=adminUser&action=listUser&pagina=<?php echo $i.$url?>"><?php echo $i ?></a></li>
+                <?php endfor ?>
+
+                <li class="page-item">
+                    <a class="page-link pag" href="#pagina=" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Siguiente</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
         <table id="tablePreview" class="table table-striped table-sm table-hover table-bordered tabalListUser">
             <thead class="listUser">
                 <tr>
@@ -74,11 +96,12 @@
             </thead>
             <tbody>  
                 <!--Si no hay usuarios en la base de datos con lo establecido a buscar, se avisará al usuario.-->
-            <?php if(isset($error) && $error === "count0"){ ?>
-                <div class="alert alert-danger" style="margin-top:5px;"> 
-                    No existe ningún usuario en nuestra base de datos con los parámetros de busqueda indicados.<br/> 
-                </div>
-                
+            <?php if(isset($data["count"]) && $data["count"] == "0"){ ?>
+                <tr>
+                    <td colspan="12">
+                       No existe ningún usuario en nuestra base de datos con los parámetros de busqueda indicados. 
+                    </td>
+                </tr>
             <?php }else{ foreach ($data["users"] as $d) : ?>
                 <tr>
                     <td><?= $d["id"]?></td>
@@ -89,15 +112,14 @@
                     <td><?= $d["password"] ?></td>
                     <td><?= $d["telefono"] ?></td>
                     <td><?= $d["direccion"] ?></td>
-                    <td class='<?php if ($d["estado"]=='0'){echo "inactivo";}else{echo "activo";} ?>'>
-                        <?php 
-                            //Si está activo, se mostrará un icono.
-                            if ($d["estado"]=='1'){
-                                echo "Activo";
-                            }else{
-                                echo "Inactivo";
-                            }
-                        ?>
+                    <td class='<?php if ($d["estado"]=='0'){echo "inactivo";}else{echo "activo";} ?>'><!--Este es para el estilo-->
+
+                        <!--Se pondrá un botón para desactivar o activar en caso de que no sea el propio usuario logueado-->
+                        <?php if($d['id'] != $_SESSION['usuario']["id"]){  if ($d["estado"]=='1'){ ?>
+                            <button type="button" class="btn btn-secondary activate" onclick="location.href='?controller=adminUser&action=changeStatusUser&id=<?=  $d['id'].'&estadoACambiar=0'.$url.'&pagina='.$_GET['pagina'] ?>'">Desactivar</button>
+                        <?php }else{ ?>
+                                <button type="button" class="btn btn-secondary activate" onclick="location.href='?controller=adminUser&action=changeStatusUser&id=<?= $d['id'].'&estadoACambiar=1'.$url.'&pagina='.$_GET['pagina'] ?>'">Activar</button>
+                        <?php }} ?>
                     </td>
                     <td><img  class="avatar" src="assets/img/avatarsUsers/<?= $d["imagen"] ?>"></td>
                     <td>

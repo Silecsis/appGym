@@ -76,4 +76,11 @@ abstract class BaseModel
   public function setLog($user_id, $action, $description) {
       $this->db->query("CALL log($user_id, '$action', '$description')");
   }
+
+  public function countTotalTable()
+  {
+    $query = $this->db->query("SELECT * FROM $this->table");
+    
+    return  $query->rowCount();
+  }
 }

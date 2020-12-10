@@ -44,24 +44,35 @@ class AdminUserController extends BaseController
       $userModel=new UserModel();
 
       if(isset($_GET["submit"])){
-        $user=$userModel->listUserDatas($_GET["nif"],$_GET["nombre"],$_GET["apellidos"],$_GET["email"],$_GET["telefono"],$_GET["direccion"],$_GET["estado"],$_GET["rol"]);
+         $user=$userModel->listUserDatas($_GET["pagina"],$_GET["nif"],$_GET["nombre"],$_GET["apellidos"],$_GET["email"],$_GET["telefono"],$_GET["direccion"],$_GET["estado"],$_GET["rol"]);
+         $totalRegistros=$user["count"];
 
+         $paginas=$totalRegistros/PAGE_SIZE;
+         //Si lo dividimos, es probable que de un número decimal, en cuyo caso daría el total de páginas de la parte entera, no de la decimal.
+         //Por ello, hacemos lo siguiente para que redondee el número hacia arriba.
+         $paginas=ceil($paginas);
+         $url="&nif={$_GET["nif"]}&nombre={$_GET["nombre"]}&apellidos={$_GET["apellidos"]}&email={$_GET["email"]}&telefono={$_GET["telefono"]}&direccion={$_GET["direccion"]}&estado={$_GET["estado"]}&rol={$_GET["rol"]}&submit=Buscar";
+         
       }else{
-        $user=$userModel->listUserDatas(); 
+         $user=$userModel->listUserDatas($_GET["pagina"]); 
+         $totalRegistros=$userModel->countTotalTable();
+
+         $paginas=$totalRegistros/PAGE_SIZE;
+         $paginas=ceil($paginas);
+         $url="";
       }
 
       if($user["correct"]){
          $params=[
-            "data"=>$user
-         ];
-      }else if($user["count"]==0){
-         $params=[
-            "error"=>"count0"
+            "data"=>$user,
+            "paginas"=>$paginas, //Para que lleve el num de páginas a la vista
+            "url"=>$url
          ];
       }else{
          $params=[
-            "error"=>"unexpected"
+            "type"=>"unexpected"
          ];
+         $this->redirect("error","index",$params);
       }
 
       $this->view->adminAuthShow("adminListUser",$params);
@@ -236,6 +247,63 @@ class AdminUserController extends BaseController
       }else{
          $this->view->adminAuthShow("adminEditUser");
       }  
+   }
+
+
+   /**
+    * Cambia el estado del usuario.
+    * Solo lo realiza el administrador.
+    *
+    * @return void
+    */
+   public function changeStatusUser()
+   {
+     $userModel=new UserModel(); 
+
+      //Verificamos que hemos recibido los parámetros desde la vista de listUserView 
+      if (isset($_GET['id']) && (is_numeric($_GET['id']))  && $_GET["id"] != $_SESSION["usuario"]["id"] 
+         && isset($_GET['estadoACambiar']) && is_numeric($_GET['estadoACambiar']) ) {
+         $id = $_GET["id"];
+         
+         //Realizamos la operación decambiar el estado recogiendo el id=$id
+         $resultModelo = $userModel->changeStatus($_GET['estadoACambiar'], $_GET['id']);
+
+
+         if ($resultModelo["correct"]){
+            $params=[
+               "correct"=>true
+            ];
+
+         }else{
+            $params=[
+               "type"=> "changeStatusIncorrect"
+            ];
+           $this->redirect("error","index",$params);
+         }
+      } else { //Si no recibimos el valor del parámetro $id generamos el mensaje indicativo:
+         $params=[
+            "type"=> "changeStatusSelf"
+         ];
+        $this->redirect("error","index",$params);
+      }
+
+      $params=[
+         "pagina"=>$_GET["pagina"]
+      ];
+
+      if(isset($_GET["submit"])){
+         $params["nif"]=$_GET["nif"];
+         $params["nombre"]=$_GET["nombre"];
+         $params["apellidos"]=$_GET["apellidos"];
+         $params["email"]=$_GET["email"];
+         $params["telefono"]=$_GET["telefono"];
+         $params["direccion"]=$_GET["direccion"];
+         $params["estado"]=$_GET["estado"];
+         $params["rol"]=$_GET["rol"];
+         $params["submit"]=$_GET["submit"];
+      }
+      //Realizamos el listado de los usuarioss
+      $this->redirect("adminUser","listUser",$params);
    }
 
 }

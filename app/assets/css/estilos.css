@@ -149,8 +149,8 @@ div.passwordForg{
 
 /*----------------------------------AdminListUserView.php------------------------------*/
 div.listUser{
-    margin-left: 25px;
-    margin-right: 25px;
+    margin-left: 3%;
+    margin-right: 3%;
     margin-bottom: 50px;
 }
 
@@ -214,12 +214,24 @@ a.listUser{
 }
 
 td.inactivo{
-    background-color: brown;
-    color: white;
+    background-color: #C88E8E ;
 }
 
 td.activo{
-    background-color:greenyellow;
+    background-color:#B8E479;
+}
+
+button.activate{
+    background-color:#CDC3DA;
+    color: black;
+    width: 100px;
+}
+
+a.pag{
+    background-color:#A895C1 ;
+    color: #3A2154;
+    font-weight: bold;
+    border: 1px solid #7650A6;
 }
 /*----------------------------------AdminEditUserView.php------------------------------*/
 div.formAdminEU{
@@ -247,3 +259,6 @@ h2.recordatorio{
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+
+/*Tenemos que hacer el ultimo examen con Antonio y le hemos preguntado de si podemos hacerlo el viernes despues del recreo, que cogería tu hora. Le hemos dicho esto pensando que ese día habríamos acabado contigo, entonces, esa hora, la tienes ocupada tu no?*/

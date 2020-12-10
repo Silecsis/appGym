@@ -13,7 +13,7 @@
                                 Administrar usuarios
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item adminUser"  href="index.php?controller=adminUser&action=listUser">Listar todos</a><!--Lista de usuarios-->
+                                <a class="dropdown-item adminUser"  href="index.php?controller=adminUser&action=listUser&pagina=1">Listar todos</a><!--Lista de usuarios-->
                                 <a class="dropdown-item adminUser"  href="index.php?controller=adminUser&action=createUser">Nuevo usuario</a><!--Registrar nuevo user-->
                             </div>
                         </div>

@@ -37,48 +37,77 @@ class UserController extends BaseController
      */
     public function registrer()
     {
-       //Llamamos al controlador del formulario.
+      //Llamamos al controlador del formulario.
       require_once 'ValidationFormController.php';
+
       if(isset($_POST["submit"])){
-           //Asociamos una variable de error por si no se validan los campos, que aparezcan en esa variable.
-         $errors=validate();
+      //-----Para el captcha:
+         require_once "views/includes/captcha.php";
+         //Clave sitio Web: 6LcX4QAaAAAAAM-lRaaF4x_Ge_fZLm8YBiYgClAZ 
+         //Clave secreta: 6LcX4QAaAAAAAPZkd9Y5wFdawtW8P-OGh2C4Lh5g  
 
-         if(count($errors) != 0){
-            //Si hay errores, se muestran.
-            $params=[
-               "errors"=>$errors
-            ];
-            //y cargamos la vista con los aprámetros de los errores, que serán los mensajes.
-            $this->view->show("editUser",$params);
-         }else{
-            //Si no hay errores, se meten los datos en la bd.
-            $userModel=new UserModel();
-
-            $archivo = (isset($_FILES['imagen'])) ? $_FILES['imagen'] : null;
-               if ($archivo) {
-                  $fileName=uniqid("avatar",true);
-                  $fileName=$fileName.".".pathinfo($archivo['name'],PATHINFO_EXTENSION);
-                  $ruta_destino_archivo = "assets/img/avatarsUsers/{$fileName}";
-                  $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
-               }
-                                                         
-            $registrerCorrect=$userModel-> createUser($_POST["nif"], $_POST["nombre"], $_POST["apellidos"], $_POST["email"], $_POST["passwordMod"],  $_POST["telefono"],$_POST["direccion"], $fileName);
-
-            if($registrerCorrect["correct"]){
-               //Si el registro es correcto, le mandamos al index para que se loguee.
-               $params=[
-                  "message"=>"registrer",
-               ];
-                
-               $this->redirect(DEFAULT_CONTROLLER, DEFAULT_ACTION,$params);
-            }else{ 
-               //Sino, le mandamos a la isma vista.
-               $params=[
-                  "errors"=>$registrerCorrect["errors"],
-               ];
-               $this->view->show("editUser",$params);
-            }
+         $secret = "6LcX4QAaAAAAAPZkd9Y5wFdawtW8P-OGh2C4Lh5g";
+         $response = null;
+         // comprueba la clave secreta
+         $reCaptcha = new ReCaptcha($secret);
+      
+         if ($_POST["g-recaptcha-response"]) {
+            $response = $reCaptcha->verifyResponse(
+            $_SERVER["REMOTE_ADDR"],
+            $_POST["g-recaptcha-response"]
+            );
          }
+
+         if ($response != null && $response->success) {
+            // Si el captcha es correcto, seguimos procesando el formulario como siempre
+            //Asociamos una variable de error por si no se validan los campos, que aparezcan en esa variable.
+            $errors=validate();
+
+            if(count($errors) != 0){
+               //Si hay errores, se muestran.
+               $params=[
+                  "errors"=>$errors
+               ];
+               //y cargamos la vista con los aprámetros de los errores, que serán los mensajes.
+               $this->view->show("editUser",$params);
+            }else{
+               //Si no hay errores, se meten los datos en la bd.
+               $userModel=new UserModel();
+
+               $archivo = (isset($_FILES['imagen'])) ? $_FILES['imagen'] : null;
+                  if ($archivo) {
+                     $fileName=uniqid("avatar",true);
+                     $fileName=$fileName.".".pathinfo($archivo['name'],PATHINFO_EXTENSION);
+                     $ruta_destino_archivo = "assets/img/avatarsUsers/{$fileName}";
+                     $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
+                  }
+                                                            
+               $registrerCorrect=$userModel-> createUser($_POST["nif"], $_POST["nombre"], $_POST["apellidos"], $_POST["email"], $_POST["passwordMod"],  $_POST["telefono"],$_POST["direccion"], $fileName);
+
+               if($registrerCorrect["correct"]){
+                  //Si el registro es correcto, le mandamos al index para que se loguee.
+                  $params=[
+                     "message"=>"registrer",
+                  ];
+                  
+                  $this->redirect(DEFAULT_CONTROLLER, DEFAULT_ACTION,$params);
+               }else{ 
+                  //Sino, le mandamos a la misma vista.
+                  $params=[
+                     "errors"=>$registrerCorrect["errors"],
+                  ];
+                  $this->view->show("editUser",$params);
+               }
+            }
+
+         } else {
+            // Si el captcha no es válido, lanzamos mensaje de error al usuario
+            $params=[
+               "error"=>"captcha"
+            ];
+            $this->view->show("editUser",$params);
+         }
+         
       }else{
           $this->view->show("editUser");
       } 

@@ -10,8 +10,10 @@
             <div class="text-center">
                 <?php 
                     if (isset($correct) && $correct){
-
                         echo '<div class="alert alert-success" style="margin-top:5px;"> Los cambios han sido realizados correctamente. </div>';
+
+                    }else if(isset($error) && $error=="captcha"){
+                        echo '<div class="alert alert-danger" style="margin-top:5px;"> Se ha producido un error por el captcha. Recuerde realizar el captcha.<br/> </div>';
                     }
                 ?> 
             </div>
@@ -82,14 +84,22 @@
                 <input type="file" name="imagen" class="form-control" <?php rememberValue($_POST["imagen"],$user->imagen) ?>/> 
                 <?php echo mostrar_error($errors, "imagen"); ?>                         
             </label>
+
+            <div>
+                <?php if(!isset($_SESSION["usuario"])){?>
+                    <br/>
+                    <!--Para Captcha:-->
+                    <div class="g-recaptcha" data-sitekey="6LcX4QAaAAAAAM-lRaaF4x_Ge_fZLm8YBiYgClAZ"></div>
+                <?php }?> 
+            </div>
+
             <div class="text-right">
-            <br/>
-            <?php if(isset($_SESSION["usuario"])){?>
-                <input type="submit" value="Editar perfil" name="submit" class="btn btn-primary" />
-            <?php }else{?>
-                <input type="submit" value="Registrarme" name="submit" class="btn btn-primary"/>
-                <label><button type="button" class="btn btn-secondary recuperarContra" onclick="location.href='index.php?controller=index&action=index'">Volver a "Login de usuario"</button></label>  
-            <?php }?>
+                <?php if(isset($_SESSION["usuario"])){?>
+                    <input type="submit" value="Editar perfil" name="submit" class="btn btn-primary" />
+                <?php }else{?>
+                    <input type="submit" value="Registrarme" name="submit" class="btn btn-primary"/>
+                    <label><button type="button" class="btn btn-secondary recuperarContra" onclick="location.href='index.php?controller=index&action=index'">Volver a "Login de usuario"</button></label>  
+                <?php }?>
             </div>
         </form>
     </div>
