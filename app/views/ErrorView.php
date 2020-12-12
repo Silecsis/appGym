@@ -24,6 +24,10 @@
                     echo '<div class="alert alert-danger" style="margin-top:5px;"> No puede acceder a este sitio sin ser administrador.<br/> </div>';
                 break;
             
+            case "deleteIncorrect":
+                echo '<div class="alert alert-danger" style="margin-top:5px;">Ha habido problemas con el borrado. Por favor, inténtelo de nuevo.<br/> </div>';
+                break;
+
             case "":
                 break;
         }

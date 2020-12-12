@@ -213,6 +213,8 @@ a.listUser{
     padding-left: 5px;
 }
 
+
+
 td.inactivo{
     background-color: #C88E8E ;
 }
@@ -233,6 +235,26 @@ a.pag{
     font-weight: bold;
     border: 1px solid #7650A6;
 }
+
+a.page-item-selected{
+    background-color: #F0EBF5 ;
+}
+
+button.eleccionPag{
+    background-color:#A895C1 ;
+    color: #3A2154;
+    font-weight: bold;
+    border: 1px solid #7650A6;
+    margin-left: 10px;
+}
+
+td.errorTable{
+    background-color: #C88E8E;
+    font-weight: bold;
+    color: white;
+}
+
+
 /*----------------------------------AdminEditUserView.php------------------------------*/
 div.formAdminEU{
     margin-bottom: 50px;
@@ -260,5 +282,57 @@ h2.recordatorio{
     margin-bottom: 10px;
 }
 
+/*----------------------------------ListActivitiesView.php------------------------------*/
+div.listUser{
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-bottom: 50px;
+}
 
-/*Tenemos que hacer el ultimo examen con Antonio y le hemos preguntado de si podemos hacerlo el viernes despues del recreo, que cogería tu hora. Le hemos dicho esto pensando que ese día habríamos acabado contigo, entonces, esa hora, la tienes ocupada tu no?*/
+table.tablaListActivities{
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 75%;
+    overflow-x: auto;
+    overflow-y: auto;
+    text-align: center;
+}
+
+div.buscarListAct{
+    text-align: center;
+    max-width: 60%;
+    margin-left: auto;
+    margin-right: auto; 
+    padding-top: 10px; 
+    border-radius: 40px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+nav.pagAct{
+    margin-left: 12%;
+}
+
+/*----------------------------------EditActivitiesView.php------------------------------*/
+form.formAdminEdit{
+    width: 70%;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;  
+    background-color:#CDC3DA; 
+    border: 3px solid;
+    border-radius: 40px;
+    padding: 50px;
+    font-weight: bold;
+}
+
+h2.recordatorio{
+    color: white;
+    background-color: sandybrown;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

@@ -11,8 +11,9 @@ require_once MODELS_FOLDER . 'UserModel.php';
  * enviarlos a la vista para su visualización.
  * 
  * Esta clase contiene las acciones que solo los admin pueden realizar.
- * 
  * En todos sus métodos se controla que sea el rol de admin.
+ * 
+ * Gestiona el CRUD de usuarios.
  */
 class AdminUserController extends BaseController
 {
@@ -45,14 +46,22 @@ class AdminUserController extends BaseController
    {
       $userModel=new UserModel();
 
+      if(isset($_GET["rxp"])){
+         $rxp=$_GET["rxp"];
+      }else{
+         $rxp=PAGE_SIZE;
+      }
+
       if(isset($_GET["submit"])){
-         $user=$userModel->listUserDatas($_GET["pagina"],$_GET["nif"],$_GET["nombre"],$_GET["apellidos"],$_GET["email"],$_GET["telefono"],$_GET["direccion"],$_GET["estado"],$_GET["rol"]);
+         $user=$userModel->listUserDatas($_GET["pagina"],$rxp,$_GET["nif"],$_GET["nombre"],$_GET["apellidos"],$_GET["email"],$_GET["telefono"],$_GET["direccion"],$_GET["estado"],$_GET["rol"]);
          $totalRegistros=$user["count"];
 
-         $paginas=$totalRegistros/PAGE_SIZE;
+         $paginas=$totalRegistros/$rxp;
          //Si lo dividimos, es probable que de un número decimal, en cuyo caso daría el total de páginas de la parte entera, no de la decimal.
          //Por ello, hacemos lo siguiente para que redondee el número hacia arriba.
          $paginas=ceil($paginas);
+
+
          $url="&nif={$_GET["nif"]}&nombre={$_GET["nombre"]}&apellidos={$_GET["apellidos"]}&email={$_GET["email"]}&telefono={$_GET["telefono"]}&direccion={$_GET["direccion"]}&estado={$_GET["estado"]}&rol={$_GET["rol"]}&submit=Buscar";
          
       }else if(!isset($_GET["submit"]) && $_SESSION["usuario"]["rol_id"]!=1){
@@ -62,10 +71,10 @@ class AdminUserController extends BaseController
          $this->redirect("error","index",$params);
 
       }else{
-         $user=$userModel->listUserDatas($_GET["pagina"]); 
+         $user=$userModel->listUserDatas($_GET["pagina"],$rxp); 
          $totalRegistros=$userModel->countTotalTable();
 
-         $paginas=$totalRegistros/PAGE_SIZE;
+         $paginas=$totalRegistros/$rxp;
          $paginas=ceil($paginas);
          $url="";
       }

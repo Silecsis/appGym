@@ -88,6 +88,8 @@ function validate() {
     $direccion = "";
     $imagen = "";
     $login = "";
+    $aforo=0;
+    $descripcion="";
 
 
 
@@ -95,20 +97,26 @@ function validate() {
   //Cuando se le de a enviar, se verificará cada campo.
     if (isset($_POST["submit"])) {
 
-        $nif=filtrado($_POST["nif"]);
+        if(isset($_POST["nif"])){
+          $nif=filtrado($_POST["nif"]);
+            if (empty($nif) || (!preg_match("/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i",$nif)) || !comprobarNif($nif)) {
+              $errors["nif"] = "Nif no válido. Asegúrate de que el nif tiene un tamaño de 9 caracteres siendo los 8 primeros números y el último una letra divisible entre 23.";   
+            }
+        }
 
-        if (empty($nif) || (!preg_match("/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i",$nif)) || !comprobarNif($nif)) {
-          $errors["nif"] = "Nif no válido. Asegúrate de que el nif tiene un tamaño de 9 caracteres siendo los 8 primeros números y el último una letra divisible entre 23.";   
-        } 
+
+        if(isset($_POST["nombre"])){
+          $nombre=filtrado($_POST["nombre"]);
+            if (empty($nombre) || (preg_match("/[0-9]/", $nombre)) || (strlen($nombre) > 15)) {
+                $errors["nombre"] = "Nombre no válido. Asegúrate de que no tenga números ni una longitud mayor de 15.";
+            }
+        }
       
-        $nombre=filtrado($_POST["nombre"]);
-        if (empty($nombre) || (preg_match("/[0-9]/", $nombre)) || (strlen($nombre) > 15)) {
-           $errors["nombre"] = "Nombre no válido. Asegúrate de que no tenga números ni una longitud mayor de 15.";
-        } 
-
-        $apellidos=filtrado($_POST["apellidos"]);
-        if (empty($apellidos) || (preg_match("/[0-9]/", $apellidos)) || (strlen($apellidos) > 50)) {
-          $errors["apellidos"] = "Apellidos no válidos. Asegúrate de que no tenga números ni una longitud mayor de 50.";
+        if(isset($_POST["apellidos"])){
+          $apellidos=filtrado($_POST["apellidos"]);
+          if (empty($apellidos) || (preg_match("/[0-9]/", $apellidos)) || (strlen($apellidos) > 50)) {
+            $errors["apellidos"] = "Apellidos no válidos. Asegúrate de que no tenga números ni una longitud mayor de 50.";
+          }
         }
       
         //Si no está logado. Control contras, imagen y login
@@ -126,7 +134,7 @@ function validate() {
             if (empty($_POST["passwordMod"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["passwordMod"]))) {
               $errors["passwordMod"] = "Contraseña no válida.  Asegúrese de que tenga tener una longitud mínima de 8 caracteres y contener letras mayúsculas, minúsculas, números y caracteres especiales.";
             }
-        }else if(isset($_SESSION["usuario"]["rol_id"]) && $_SESSION["usuario"]["rol_id"]==1 && !isset($_GET["id"])){
+        }else if(isset($_SESSION["usuario"]["rol_id"]) && $_SESSION["usuario"]["rol_id"]==1 && !isset($_GET["id"]) && $_GET["action"]!="createActivities"){
             // Si está logueado con el rol de admin, pero en la barra no hay id, no deberá controlar el error de contraseña. 
             if (!isset($_FILES["imagen"]) || $_FILES["imagen"]["error"] != 0) {
               $errors["imagen"] = "Imagen no válida. Asegúrate de no dejar éste campo vacío.";
@@ -160,18 +168,32 @@ function validate() {
         }
 
         //Valida telefono movil español y telefono fijo español
-        
-        if ((!empty($_POST["telefono"]) && preg_match("/^(\34|0034|34)?[ -]*(6|7)[ -]*([0-9][ -]*){8}$/", $_POST["telefono"])) 
+
+        if(isset($_POST["telefono"])){
+          if ((!empty($_POST["telefono"]) && preg_match("/^(\34|0034|34)?[ -]*(6|7)[ -]*([0-9][ -]*){8}$/", $_POST["telefono"])) 
             || (!empty($_POST["telefono"])) && preg_match("/^(\34|0034|34)?[ -]*(8|9)[ -]*([0-9][ -]*){8}$/", $_POST["telefono"])) {
-               $telefono=filtrado($_POST["telefono"]);
-        } else {
-          $errors["telefono"] = "Teléfono no válido. Asegúrese de que empiece por '0034' o '34' (estos casos anteriores opcionales, lo siguiente es obligatorio), que luego le siga un '6' o '7' (en caso de ser móvil) o '8' o '9' (en caso de ser fijo) y que el resto de números tengan una longitud de 8 caracteres.";
+
+                  $telefono=filtrado($_POST["telefono"]);
+          } else {
+            $errors["telefono"] = "Teléfono no válido. Asegúrese de que empiece por '0034' o '34' (estos casos anteriores opcionales, lo siguiente es obligatorio), que luego le siga un '6' o '7' (en caso de ser móvil) o '8' o '9' (en caso de ser fijo) y que el resto de números tengan una longitud de 8 caracteres.";
+          }
+
         }
         
 
-        if (empty($_POST["direccion"])) {
+        if (isset($_POST["telefono"]) && empty($_POST["direccion"])) {
           $errors["direccion"] = "Dirección no válida. No puedes dejar este campo vacío.";
         }
+
+        //Actividades dirigidas:
+        if (isset($_POST["descripcion"]) && empty($_POST["descripcion"])) {
+          $errors["descripcion"] = "Descripción no válida. Asegúrate de no dejar este campo vacío ni que tenga una longitud mayor a 100 caracteres.";
+        }
+
+        if (isset($_POST["descripcion"]) && (empty($_POST["aforo"]) || $_POST["aforo"] < 1 || $_POST["aforo"] > 50)) {
+          $errors["aforo"] = "Aforo no válido. Asegúrate de no dejar este campo vacío y de que el aforo esté entre 1 y 50.";
+        }
+
     }
   return $errors;
 }

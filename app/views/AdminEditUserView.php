@@ -89,7 +89,7 @@
 
             <div class=" text-right">
                 <?php if(isset($_GET["id"])){ ?>	
-                    <button type="button" class="btn btn-secondary" onclick="location.href='index.php?controller=adminUser&action=listUser&pagina=1'">Volver a "Listar usuario"</button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='index.php?controller=adminUser&action=listUser&pagina=1&rxp=10'">Volver a "Listar usuario"</button>
                     <input type="submit" name="submit" value="Editar usuario"  class="btn btn-primary"/> 
                 <?php }else{ ?>
                     <input type="submit" name="submit" value="Crear usuario"  class="btn btn-primary"/> 

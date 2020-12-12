@@ -14,6 +14,7 @@
                 <input type="hidden" name="controller" value="adminUser"/>
                 <input type="hidden" name="action" value="listUser"/>
                 <input type="hidden" name="pagina" value="<?php echo $_GET["pagina"] ?>"/>
+                <input type="hidden" name="rxp" value="<?php echo $_GET["rxp"] ?>"/>
 
                 <label class="blu">NIF: 
                     <input name="nif" type="text" class="blu" <?php rememberValue($_GET["nif"],$vacio) ?>/>
@@ -54,30 +55,45 @@
         </fieldset>
     </div>
     <div class="tablaListUser">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item">
-                <!--Para ir a la página anterior, le restamos 1 a la pagina recibida por el get-->
-                    <a class="page-link pag" href="index.php?controller=adminUser&action=listUser&pagina=<?php $pagAct=$_GET["pagina"]; if($pagAct>1){$pagAct=$pagAct-1;}else{$pagAct==1;}echo $pagAct.$url;?>" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Anterior</span>
-                    </a>
-                </li>
+        <div class="input-group">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                    <!--Para ir a la página anterior, le restamos 1 a la pagina recibida por el get-->
+                        <a class="page-link pag" href="index.php?controller=adminUser&action=listUser&pagina=<?php $pagAct=$_GET["pagina"]; if($pagAct>1){$pagAct=$pagAct-1;}else{$pagAct==1;}echo $pagAct."&rxp=".$_GET["rxp"].$url;?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Anterior</span>
+                        </a>
+                    </li>
 
-                <?php for ($i=1;$i<=$paginas;$i++): ?>
-                <li class="page-item">
-                    <a class="page-link pag" href="index.php?controller=adminUser&action=listUser&pagina=<?php echo $i.$url?>"><?php echo $i ?></a></li>
-                <?php endfor ?>
+                    <?php for ($i=1;$i<=$paginas;$i++): ?>
+                    <li class="page-item">
+                        <a class="page-link pag <?php if($_GET["pagina"]==$i){ echo "page-item-selected";}?>" href="index.php?controller=adminUser&action=listUser&pagina=<?php echo $i."&rxp=".$_GET["rxp"].$url?>"><?php echo $i ?></a></li>
+                    <?php endfor ?>
 
-                <li class="page-item">
-                    <a class="page-link pag" href="index.php?controller=adminUser&action=listUser&pagina=<?php $pagAct=$_GET["pagina"]; if($pagAct<$paginas){$pagAct=$pagAct+1;}else{$pagAct==$paginas;}echo $pagAct.$url;?>" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Siguiente</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+                    <li class="page-item">
+                        <a class="page-link pag" href="index.php?controller=adminUser&action=listUser&pagina=<?php $pagAct=$_GET["pagina"]; if($pagAct<$paginas){$pagAct=$pagAct+1;}else{$pagAct==$paginas;}echo $pagAct."&rxp=".$_GET["rxp"].$url;?>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Siguiente</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
 
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle eleccionPag"
+                        type="button" id="dropdownMenu1" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    <?php if(isset($_GET["rxp"])){ echo $_GET["rxp"];}else{ echo PAGE_SIZE;}?> registros x pág
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <a class="dropdown-item" href="index.php?controller=adminUser&action=listUser&pagina=1&rxp=2<?php echo $url ?>" >2 registros</a>
+                    <a class="dropdown-item" href="index.php?controller=adminUser&action=listUser&pagina=1&rxp=6<?php echo $url ?>">6 registros</a>
+                    <a class="dropdown-item" href="index.php?controller=adminUser&action=listUser&pagina=1&rxp=8<?php echo $url ?>">8 registros</a>
+                    <a class="dropdown-item" href="index.php?controller=adminUser&action=listUser&pagina=1&rxp=10<?php echo $url ?>">10 registros</a>
+                </div>
+            </div>
+        </div>
         <table id="tablePreview" class="table table-striped table-sm table-hover table-bordered tabalListUser">
             <thead class="listUser">
                 <tr>
@@ -99,7 +115,7 @@
                 <!--Si no hay usuarios en la base de datos con lo establecido a buscar, se avisará al usuario.-->
             <?php if(isset($data["count"]) && $data["count"] == "0"){ ?>
                 <tr>
-                    <td colspan="12">
+                    <td colspan="12" class="errorTable">
                        No existe ningún usuario con los parámetros de busqueda indicados en nuestra base de datos . 
                     </td>
                 </tr>
@@ -135,8 +151,8 @@
                     </td>
                     <td>
                         <?php if($d['id'] != $_SESSION['usuario']["id"]){?>
-                            <a href="?controller=adminUser&action=editUser&id=<?= $d['id'] ?>" class="listUser"><i class="fas fa-user-edit"></i>Editar </a>
-                            <a href="?controller=adminUser&action=deleteUser&id=<?= $d['id'].$url.'&pagina='.$_GET['pagina'] ?>" class="listUser"><i class="fas fa-user-slash"></i>Eliminar</a>
+                            <a href="?controller=adminUser&action=editUser&id=<?= $d['id']."&rxp=".$_GET["rxp"] ?>" class="listUser"><i class="fas fa-user-edit"></i>Editar </a>
+                            <a href="?controller=adminUser&action=deleteUser&id=<?= $d['id']."&rxp=".$_GET["rxp"].$url.'&pagina='.$_GET['pagina'] ?>" class="listUser"><i class="fas fa-user-slash"></i>Eliminar</a>
 
                         <?php } ?>
                         

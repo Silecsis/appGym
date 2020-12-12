@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-12-2020 a las 12:34:52
+-- Tiempo de generación: 12-12-2020 a las 22:13:04
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.2.34
 
@@ -20,6 +20,30 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `appgym`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `actividades`
+--
+
+CREATE TABLE `actividades` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `descripcion` varchar(150) NOT NULL,
+  `aforo` int(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `actividades`
+--
+
+INSERT INTO `actividades` (`id`, `nombre`, `descripcion`, `aforo`) VALUES
+(1, 'bodybalance', 'aqui va una descripción', 5),
+(2, 'blah', 'sd', 5),
+(3, 'bodybalance', 'aqui va una descripción', 5),
+(4, 'bodybalance', 'aqui va una descripción', 5),
+(5, 'gagag', 'aqui va una descripción', 5);
 
 -- --------------------------------------------------------
 
@@ -65,27 +89,27 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `nif`, `nombre`, `apellidos`, `email`, `password`, `telefono`, `direccion`, `estado`, `imagen`, `rol_id`) VALUES
-(7, '49086023K', 'MEJORA', 'Campón', 'silecsis@gmail.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'miusuer.png', 2),
 (8, '49086023K', 'mara', 'cam', 'maria@gmail.com', 'dc468c70fb574ebd07287b38d0d0676d', 34617719981, 'calle blah', 1, 'miusuer.png', 1),
-(23, '49086023K', 'dasd', 'asd', 'cer@gmail.com', '0bb440353f368ea6680333e925dad2d9', 678788789, 'Calle cual', 0, 'avatar5fd12338bdeb76.11668672.png', 2),
-(24, '49086023K', 'maria', 'wqwe', 'marinoje222t@outlook.com', '0bb440353f368ea6680333e925dad2d9', 34617719981, 'ads', 0, 'avatar5fd10907618663.09455634.png', 2),
-(25, '29747147M', 'Fran', 'Gar Cor', 'asd@asd.es', '0bb440353f368ea6680333e925dad2d9', 34617719981, 'Calle cual', 1, 'avatar5fd1f3961c2137.63402057.png', 2),
-(26, '29747147M', 'Fran', 'Gar Cor', 'fafa@asd.es', '0bb440353f368ea6680333e925dad2d9', 34617719981, 'Calle cual', 1, 'avatar5fd1f42a64a636.95578953.png', 2),
-(27, '29747147M', 'Fran', 'Gar Cor', 'cece@asd.es', '0bb440353f368ea6680333e925dad2d9', 34617719981, 'Calle cual', 1, 'avatar5fd1f451838ba4.81861570.png', 1),
-(28, '29747147M', 'Fran', 'Gar Cor', 'jare@asd.es', '0bb440353f368ea6680333e925dad2d9', 34617719981, 'Calle cual', 1, 'avatar5fd1f4dcf244d0.32775598.png', 1),
-(29, '29747147M', 'Fran', 'Gar Cor', 'tete@asd.es', '0bb440353f368ea6680333e925dad2d9', 34617719981, 'Calle cual', 1, 'avatar5fd1f52c993733.57116677.png', 1),
-(30, '29747147M', 'Fran', 'Gar Cor', 'pepe@asd.es', '0bb440353f368ea6680333e925dad2d9', 34617719981, 'Calle cual', 1, 'avatar5fd1f55b6b0294.97129773.png', 1),
-(31, '29747147M', 'Fran', 'Gar Cor', 'afu@asd.es', '0bb440353f368ea6680333e925dad2d9', 34617719981, 'Calle cual', 1, 'avatar5fd1f5c2e9f028.37134669.png', 2),
-(32, '29747147M', 'Fran', 'Gar Cor', 'prueba@asd.es', '0bb440353f368ea6680333e925dad2d9', 34617719981, 'Calle cual', 1, 'avatar5fd1f6607faa83.20464630.png', 1),
-(33, '29747147M', 'mara', 'asd', 'asd@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'ads', 0, 'avatar5fd1f6c528af43.54726900.png', 2),
-(34, '29747147M', 'mara', 'asd', 'dada@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'ads', 0, 'avatar5fd1f72b494ed4.59075759.png', 2),
-(35, '29747147M', 'mara', 'asd', 'asasdasdd@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'ads', 0, 'avatar5fd1f749008aa0.88643477.png', 2),
-(36, '29747147M', 'mara', 'asd', 'asasdasxaxaxdd@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'ads', 0, 'avatar5fd1f79f7c2732.26410641.png', 2),
-(37, '49086023K', 'PruebaNom', 'PruebaApe', 'prueba@email.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle prueba', 1, 'avatar5fd204a9463d53.70881566.png', 2);
+(41, '29747147M', 'asdd', 'asdd', 'asd@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d16f321ee1.64925263.png', 2),
+(43, '29747147M', 'asdd', 'asdd', 'asasad@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d74cbe55b9.33678262.png', 2),
+(44, '29747147M', 'asdd', 'asdd', 'a123sd@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d75d5f73f6.40314120.png', 1),
+(45, '29747147M', 'asdd', 'asdd', 'asas22ad@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d76885ef38.23574082.png', 1),
+(46, '29747147M', 'asdd', 'asdd', 'asd3@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d776295527.22284836.png', 1),
+(47, '29747147M', 'asdd', 'asdd', 'asa33sad@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 0, 'avatar5fd4d7832db867.10570291.png', 2),
+(48, '29747147M', 'asdd', 'asdd', 'a123s333d@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 0, 'avatar5fd4d78ed31115.94284723.png', 2),
+(49, '29747147M', 'asdd', 'asdd', 'asas22ad333@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 0, 'avatar5fd4d8d233cbb9.70696708.png', 2),
+(50, '29747147M', 'asdd', 'asdd', 'as11as22ad@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d7a99a7bb4.76166243.png', 1),
+(51, '29747147M', 'asdd', 'asdd', 'a11sd3@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d8685ab723.91289395.png', 1);
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `actividades`
+--
+ALTER TABLE `actividades`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `rol`
@@ -106,6 +130,12 @@ ALTER TABLE `usuario`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `actividades`
+--
+ALTER TABLE `actividades`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
@@ -115,7 +145,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- Restricciones para tablas volcadas

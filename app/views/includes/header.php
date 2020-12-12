@@ -8,16 +8,27 @@
             <div class="navHeader"> 
                 <!--Si se entra como admin:-->
                  <?php if ($_SESSION['usuario']["rol_id"]=='1'){ ?>
-                        <div class="dropdown mr-auto adminUser">
+                    <div class="input-group">
+                        <div class="dropdown mr-3 adminUser">
                             <button class="btn dropdown-toggle adminUser" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Administrar usuarios
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item adminUser"  href="index.php?controller=adminUser&action=listUser&pagina=1">Listar todos</a><!--Lista de usuarios-->
+                                <a class="dropdown-item adminUser"  href="index.php?controller=adminUser&action=listUser&pagina=1&rxp=10">Listar todos</a><!--Lista de usuarios-->
                                 <a class="dropdown-item adminUser"  href="index.php?controller=adminUser&action=createUser">Nuevo usuario</a><!--Registrar nuevo user-->
                             </div>
                         </div>
-                    <?php } ?>
+                        <div class="dropdown mr-3 adminUser">
+                            <button class="btn dropdown-toggle adminUser" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Actividades dirigidas
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item adminUser"  href="index.php?controller=adminActivities&action=listActivities&pagina=1&rxp=10">Listar actividades</a>
+                                <a class="dropdown-item adminUser"  href="index.php?controller=adminActivities&action=createActivities">Nueva actividad</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
 
                 <nav class="mb-1 navbar navbar-expand-lg navbar-dark default-color">
                 <!--Enlace para ir a home-->

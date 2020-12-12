@@ -387,7 +387,7 @@ class UserModel extends BaseModel
      * @param integer $page
      * @return void Devuelve una serie de parametros que será los usurios, si es correcto y si tiene errores.
      */
-    public function listUserDatas($page=1,$nif="",$nombre="",$apellidos="",$email="", $telefono="", $direccion="", $estado="",$rol="")
+    public function listUserDatas($page=1,$rxp=10,$nif="",$nombre="",$apellidos="",$email="", $telefono="", $direccion="", $estado="",$rol="")
     {
       $page=$page-1;
       $return = [
@@ -452,16 +452,16 @@ class UserModel extends BaseModel
             $count=$query_count->fetchObject()->count;
 
             //Para paginación:
-            if($page * PAGE_SIZE >= $count){
+            if($page>0 && $page * $rxp >= $count){
 
-               if($count%PAGE_SIZE==0){
-                  $page= ($count/PAGE_SIZE) - 1;
+               if($count%$rxp==0){
+                  $page= ($count/$rxp) - 1;
                }else{
-                  $page= floor($count/PAGE_SIZE);
+                  $page= floor($count/$rxp);
                }
             }
 
-            $sql=$sql." LIMIT ".PAGE_SIZE." OFFSET ".(PAGE_SIZE * $page);//* page para que se salte los elementos
+            $sql=$sql." LIMIT ".$rxp." OFFSET ".($rxp * $page);//* page para que se salte los elementos
             $query = $this->db->query($sql);
 
              $row = $query;
