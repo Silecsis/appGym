@@ -139,20 +139,24 @@ function validate() {
             }
 
         }else{
+
+          if(isset($_POST["passwordMod"])){
             //Para modificar contra. (passwordMod)
-            $passwordAct=$_SESSION["usuario"]["password"]; //La contra actual.
-            $passwordMod=filtrado($_POST["passwordMod"]); //La contra nueva.
-            $password=filtrado($_POST["password"]); //La contra que introduce el user como actual.
-            //Si la contra introducida por el user no es igual a la que hay en base de datos, se informa.
-            if(!empty($password) && MD5($password) !== $passwordAct){
-              $_POST["passwordMod"]="";
-              $errors["password"] = "La contraseña que ha introducido no es la que figura en nuestra base de datos.";
-            }else if (!empty($password) && MD5($password) === $passwordAct){
-              if (empty($_POST["passwordMod"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["passwordMod"]))) {
-                
-                $errors["passwordMod"] = "Contraseña no válida.  Asegúrese de que tenga tener una longitud mínima de 8 caracteres y contener letras mayúsculas, minúsculas, números y caracteres especiales.";
+              $passwordAct=$_SESSION["usuario"]["password"]; //La contra actual.
+              $passwordMod=filtrado($_POST["passwordMod"]); //La contra nueva.
+              $password=filtrado($_POST["password"]); //La contra que introduce el user como actual.
+              //Si la contra introducida por el user no es igual a la que hay en base de datos, se informa.
+              if(!empty($password) && MD5($password) !== $passwordAct){
+                $_POST["passwordMod"]="";
+                $errors["password"] = "La contraseña que ha introducido no es la que figura en nuestra base de datos.";
+              }else if (!empty($password) && MD5($password) === $passwordAct){
+                if (empty($_POST["passwordMod"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["passwordMod"]))) {
+                  
+                  $errors["passwordMod"] = "Contraseña no válida.  Asegúrese de que tenga tener una longitud mínima de 8 caracteres y contener letras mayúsculas, minúsculas, números y caracteres especiales.";
+                }
               }
-            }
+          }
+            
         }
 
         //Valida telefono movil español y telefono fijo español

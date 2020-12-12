@@ -43,21 +43,6 @@
                 <?php echo mostrar_error($errors, "email"); ?>  
             </label>
 
-            <!--Si estamos editando-->
-            <?php if(isset($_GET["id"])){?>
-                <br/>
-                <!--Para poder cambiar la contraseña del usuario, deberá sabersela de antemano.-->
-                <label for="password">Contraseña actual del usuario
-                    <input type="password" name="password" class="form-control" <?php rememberValue($_POST["password"],$_POST["password"]) ?> />
-                    <?php echo mostrar_error($errors, "password"); ?> 
-                </label> 
-                <br/>
-
-                <label for="passwordMod">Nueva contraseña              
-                    <input type="password" name="passwordMod" class="form-control" <?php rememberValue($_POST["passwordMod"],$_POST["passwordMod"]) ?>/>
-                    <?php echo mostrar_error($errors, "passwordMod"); ?>                  
-                </label>
-            <?php }?>
             <br/>
             <label for="telefono"> Teléfono
                 <input type="text" name="telefono" class="form-control" <?php rememberValue($_POST["telefono"],$user->telefono) ?> /> 
@@ -104,7 +89,7 @@
 
             <div class=" text-right">
                 <?php if(isset($_GET["id"])){ ?>	
-                    <button type="button" class="btn btn-secondary" onclick="location.href='index.php?controller=adminUser&action=listUser'">Volver a "Listar usuario"</button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='index.php?controller=adminUser&action=listUser&pagina=1'">Volver a "Listar usuario"</button>
                     <input type="submit" name="submit" value="Editar usuario"  class="btn btn-primary"/> 
                 <?php }else{ ?>
                     <input type="submit" name="submit" value="Crear usuario"  class="btn btn-primary"/> 

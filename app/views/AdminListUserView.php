@@ -57,7 +57,8 @@
         <nav aria-label="Page navigation example">
             <ul class="pagination">
                 <li class="page-item">
-                    <a class="page-link pag" href="<?php echo $url."&?"?>" aria-label="Previous"><!--Para ir a la página anterior, le restamos 1 a la pagina recibida por el get-->
+                <!--Para ir a la página anterior, le restamos 1 a la pagina recibida por el get-->
+                    <a class="page-link pag" href="index.php?controller=adminUser&action=listUser&pagina=<?php $pagAct=$_GET["pagina"]; if($pagAct>1){$pagAct=$pagAct-1;}else{$pagAct==1;}echo $pagAct.$url;?>" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Anterior</span>
                     </a>
@@ -69,7 +70,7 @@
                 <?php endfor ?>
 
                 <li class="page-item">
-                    <a class="page-link pag" href="#pagina=" aria-label="Next">
+                    <a class="page-link pag" href="index.php?controller=adminUser&action=listUser&pagina=<?php $pagAct=$_GET["pagina"]; if($pagAct<$paginas){$pagAct=$pagAct+1;}else{$pagAct==$paginas;}echo $pagAct.$url;?>" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Siguiente</span>
                     </a>
@@ -99,7 +100,7 @@
             <?php if(isset($data["count"]) && $data["count"] == "0"){ ?>
                 <tr>
                     <td colspan="12">
-                       No existe ningún usuario en nuestra base de datos con los parámetros de busqueda indicados. 
+                       No existe ningún usuario con los parámetros de busqueda indicados en nuestra base de datos . 
                     </td>
                 </tr>
             <?php }else{ foreach ($data["users"] as $d) : ?>
@@ -116,7 +117,7 @@
 
                         <!--Se pondrá un botón para desactivar o activar en caso de que no sea el propio usuario logueado-->
                         <?php if($d['id'] != $_SESSION['usuario']["id"]){  if ($d["estado"]=='1'){ ?>
-                            <button type="button" class="btn btn-secondary activate" onclick="location.href='?controller=adminUser&action=changeStatusUser&id=<?=  $d['id'].'&estadoACambiar=0'.$url.'&pagina='.$_GET['pagina'] ?>'">Desactivar</button>
+                            <button type="button" class="btn btn-secondary activate" onclick="location.href='?controller=adminUser&action=changeStatusUser&id=<?= $d['id'].'&estadoACambiar=0'.$url.'&pagina='.$_GET['pagina'] ?>'">Desactivar</button>
                         <?php }else{ ?>
                                 <button type="button" class="btn btn-secondary activate" onclick="location.href='?controller=adminUser&action=changeStatusUser&id=<?= $d['id'].'&estadoACambiar=1'.$url.'&pagina='.$_GET['pagina'] ?>'">Activar</button>
                         <?php }} ?>
@@ -135,7 +136,7 @@
                     <td>
                         <?php if($d['id'] != $_SESSION['usuario']["id"]){?>
                             <a href="?controller=adminUser&action=editUser&id=<?= $d['id'] ?>" class="listUser"><i class="fas fa-user-edit"></i>Editar </a>
-                            <a href="?controller=adminUser&action=deleteUser&id=<?= $d['id'] ?>" class="listUser"><i class="fas fa-user-slash"></i>Eliminar</a>
+                            <a href="?controller=adminUser&action=deleteUser&id=<?= $d['id'].$url.'&pagina='.$_GET['pagina'] ?>" class="listUser"><i class="fas fa-user-slash"></i>Eliminar</a>
 
                         <?php } ?>
                         

@@ -505,6 +505,7 @@ class UserModel extends BaseModel
             //Supervisamos si la eliminación se realizó correctamente... 
             if ($query) {
                $return["correct"] = TRUE;
+               
             } 
 
          } catch (PDOException $ex) {
@@ -534,7 +535,7 @@ class UserModel extends BaseModel
      * @param integer $id
      * @return array devuelve el resultado de la operación
      */
-    public function adminEditUser($nif, $nombre, $apellidos, $email, $password, $telefono, $direccion, $estado, $imagen,$rol_id, $id)
+    public function adminEditUser($nif, $nombre, $apellidos, $email, $telefono, $direccion, $estado, $imagen,$rol_id, $id)
     {
        //Guarda si es válido, los datos de la tabla de usuario de base de datos y el mensaje de error en caso de haber.
        $return = [
@@ -548,10 +549,6 @@ class UserModel extends BaseModel
             nif = '$nif', nombre = '$nombre', apellidos = '$apellidos', telefono = '$telefono', 
             direccion = '$direccion', estado = '$estado', rol_id = '$rol_id'" ;
 
-         if (isset($password) && $password != ""){
-            //Si cambia la contraseña, se incluye en el sql.
-            $sql=$sql . ", password = MD5('$password')";
-         } 
 
          if (isset($imagen) && $imagen != ""){
             //Si cambia la imagen, se incluye en el sql

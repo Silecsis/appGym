@@ -11,6 +11,8 @@ require_once MODELS_FOLDER . 'UserModel.php';
  * enviarlos a la vista para su visualización.
  * 
  * Esta clase contiene las acciones que solo los admin pueden realizar.
+ * 
+ * En todos sus métodos se controla que sea el rol de admin.
  */
 class AdminUserController extends BaseController
 {
@@ -53,6 +55,12 @@ class AdminUserController extends BaseController
          $paginas=ceil($paginas);
          $url="&nif={$_GET["nif"]}&nombre={$_GET["nombre"]}&apellidos={$_GET["apellidos"]}&email={$_GET["email"]}&telefono={$_GET["telefono"]}&direccion={$_GET["direccion"]}&estado={$_GET["estado"]}&rol={$_GET["rol"]}&submit=Buscar";
          
+      }else if(!isset($_GET["submit"]) && $_SESSION["usuario"]["rol_id"]!=1){
+         $params=[
+            "type"=>"noAdmin"
+         ];
+         $this->redirect("error","index",$params);
+
       }else{
          $user=$userModel->listUserDatas($_GET["pagina"]); 
          $totalRegistros=$userModel->countTotalTable();
@@ -88,35 +96,53 @@ class AdminUserController extends BaseController
     */
    public function deleteUser()
    {
-      //Verificamos que hemos recibido los parámetros desde la vista de listUserView 
-      if (isset($_GET['id']) && (is_numeric($_GET['id'])) && $_GET["id"]!=$_SESSION["usuario"]["id"]) {
+      //Verificamos que hemos recibido los parámetros desde la vista de listUserView, que no podemos eliminarnos a nosotros mismos
+      //y que tengamos el rol de admin (por si nos roban la URL).
+      if (isset($_GET['id']) && (is_numeric($_GET['id'])) && $_GET["id"]!=$_SESSION["usuario"]["id"] && $_SESSION["usuario"]["rol_id"]==1) {
          $id = $_GET["id"];
 
          $userModel=new UserModel();
 
+         //Para borrar la img de la carpeta.
+         $user=$userModel->getBy("id",$id);
+         $imagenUser=$user[0]->imagen;
+         $pathImegnUser="assets/img/avatarsUsers/{$imagenUser}";
+
          //Realizamos la operación de suprimir el usuario con el id=$id
          $resultModelo = $userModel->deleteUser($id);
-
 
          if ($resultModelo["correct"]){
             $params=[
                "correct"=>true
             ];
-
+            unlink($pathImegnUser);//Borra la imagen de avatar de la carpeta avatarsUsers
          }else{
             $params=[
                "type"=> "deleteIncorrect"
             ];
            $this->redirect("error","index",$params);
          }
-      } else { //Si no recibimos el valor del parámetro $id generamos el mensaje indicativo:
+         
+      } else if($_SESSION["usuario"]["rol_id"]!=1){
          $params=[
-            "type"=> "deleteSelfAdmin"
+            "type"=>"noAdmin"
+         ];
+         $this->redirect("error","index",$params);
+
+      }else if($_GET["id"]==$_SESSION["usuario"]["id"]){
+         $params=[
+            "type"=>"deleteSelfAdmin"
+         ];
+         $this->redirect("error","index",$params);
+
+      }else{ //Si no recibimos el valor del parámetro $id generamos el mensaje indicativo:
+         $params=[
+            "type"=> "unexpected"
          ];
         $this->redirect("error","index",$params);
       }
       //Realizamos el listado de los usuarios
-      $this->redirect("adminUser","listUser");
+      $this->listUser();
    }
 
 
@@ -133,10 +159,15 @@ class AdminUserController extends BaseController
       require_once 'ValidationFormController.php';
 
       //Verificamos que hemos recibido los parámetros desde la vista de listUserView 
-      if (isset($_GET['id']) && (is_numeric($_GET['id'])) && $_GET["id"] != $_SESSION["usuario"]["id"]) {
+      if (isset($_GET['id']) && (is_numeric($_GET['id'])) && $_GET["id"] != $_SESSION["usuario"]["id"] && $_SESSION["usuario"]["rol_id"]==1) {
          $id = $_GET["id"];
 
          $userModel=new UserModel();
+
+         //Para borrar la img de la carpeta.
+         $user=$userModel->getBy("id",$id);
+         $imagenUser=$user[0]->imagen;
+         $pathImegnUser="assets/img/avatarsUsers/{$imagenUser}";
 
          if(isset($_POST["submit"])){
             $errors=validate();
@@ -160,8 +191,10 @@ class AdminUserController extends BaseController
                      $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
                   }
                                                       
-               $editCorrect=$userModel-> adminEditUser($_POST["nif"], $_POST["nombre"], $_POST["apellidos"], $_POST["email"], $_POST["passwordMod"], $_POST["telefono"], $_POST["direccion"],$_POST["estado"], $fileName,$_POST["rol"], $_GET["id"]);
+               $editCorrect=$userModel-> adminEditUser($_POST["nif"], $_POST["nombre"], $_POST["apellidos"], $_POST["email"], $_POST["telefono"], $_POST["direccion"],$_POST["estado"], $fileName,$_POST["rol"], $_GET["id"]);
                
+               //Eliminamos la imagen antigua de la carpeta
+               unlink($pathImegnUser);
                $params=[
                   "id"=>$_GET["id"],
                   "success"=> true
@@ -180,15 +213,28 @@ class AdminUserController extends BaseController
             $this->authView("adminEditUser","AdminUser","index",$params);
          }
 
-      } else { //Si no recibimos el valor del parámetro $id generamos el mensaje indicativo:
+      } else if($_SESSION["usuario"]["rol_id"]!=1){
+         $params=[
+            "type"=>"noAdmin"
+         ];
+         $this->redirect("error","index",$params);
+
+      }else if($_GET["id"] == $_SESSION["usuario"]["id"]){
+
          $params=[
             "type"=>"editSelfAdmin" //Error que indica que no hemos podido acceder al id.
          ];
 
          $this->redirect("error","index",$params);
+
+      }else{ //Si no recibimos el valor del parámetro $id generamos el mensaje indicativo:
+         $params=[
+            "type"=>"unexpected" //Error que indica que no hemos podido acceder al id.
+         ];
+
+         $this->redirect("error","index",$params);
       }
       
-      //$this->listUser();
    }
 
 
@@ -203,7 +249,7 @@ class AdminUserController extends BaseController
    {
       require_once 'ValidationFormController.php';
       
-      if(isset($_POST["submit"])){
+      if(isset($_POST["submit"]) && $_SESSION["usuario"]["rol_id"]==1){
             //Asociamos una variable de error por si no se validan los campos, que aparezcan en esa variable.
          $errors=validate();
 
@@ -244,6 +290,12 @@ class AdminUserController extends BaseController
                $this->view->adminAuthShow("adminEditUser",$params);
             }
          }
+      }else if(!isset($_POST["submit"]) && $_SESSION["usuario"]["rol_id"]!=1){
+         $params=[
+            "type"=>"noAdmin"
+         ];
+         $this->redirect("error","index",$params);
+
       }else{
          $this->view->adminAuthShow("adminEditUser");
       }  
@@ -261,7 +313,7 @@ class AdminUserController extends BaseController
      $userModel=new UserModel(); 
 
       //Verificamos que hemos recibido los parámetros desde la vista de listUserView 
-      if (isset($_GET['id']) && (is_numeric($_GET['id']))  && $_GET["id"] != $_SESSION["usuario"]["id"] 
+      if (isset($_GET['id']) && (is_numeric($_GET['id']))  && $_GET["id"] != $_SESSION["usuario"]["id"] && $_SESSION["usuario"]["rol_id"]==1
          && isset($_GET['estadoACambiar']) && is_numeric($_GET['estadoACambiar']) ) {
          $id = $_GET["id"];
          
@@ -280,7 +332,19 @@ class AdminUserController extends BaseController
             ];
            $this->redirect("error","index",$params);
          }
-      } else { //Si no recibimos el valor del parámetro $id generamos el mensaje indicativo:
+      } else if($_SESSION["usuario"]["rol_id"]!=1){
+         $params=[
+            "type"=>"noAdmin"
+         ];
+         $this->redirect("error","index",$params);
+
+      }else if($_GET["id"] == $_SESSION["usuario"]["id"]){
+         $params=[
+            "type"=>"changeStatusSelf"
+         ];
+         $this->redirect("error","index",$params);
+
+      }else { //Si no recibimos el valor del parámetro $id generamos el mensaje indicativo:
          $params=[
             "type"=> "changeStatusSelf"
          ];
