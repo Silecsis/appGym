@@ -237,15 +237,23 @@ class UserModel extends BaseModel
          //Por ultimo, insertamos el dato único que será el id para más seguridad que el email.
          $sql=$sql . " WHERE id = '$id'";
          
+          //Inicializamos la transacción
+         $this->db->beginTransaction();
          $query = $this->db->query($sql);
+         
+         //No es necesario porque le asigno las variables directamente.
+         // $query = $this->db->prepare($sql);
+         // $query->execute(['id' => $id]);
       
          //Supervisamos si la inserción se realizó correctamente... 
          if ($query) {
+            $this->db->commit();
             $_SESSION["usuario"]["password"]=MD5($password);
             $return["correct"] = TRUE;
          } 
 
       }catch (PDOException $ex) {
+         $this->db->rollback(); 
          $return["error"] = $ex->getMessage();
       }
       return $return;
@@ -321,15 +329,19 @@ class UserModel extends BaseModel
                   VALUES 
                   ('$nif', '$nombre', '$apellidos','$email',  MD5('$password'),  '$telefono', '$direccion','0','$imagen', '2')" ;
 
+            //Inicializamos la transacción
+            $this->db->beginTransaction();
             $query = $this->db->query($sql);
 
          
             //Supervisamos si la inserción se realizó correctamente... 
             if ($query) {
+               $this->db->commit();
                $return["correct"] = TRUE;
             } 
          }
       }catch (PDOException $ex) {
+         $this->db->rollback();
          $return["errors"]["generic"] = $ex->getMessage();
       }
 
@@ -357,14 +369,18 @@ class UserModel extends BaseModel
                 password = MD5('$password') 
                   WHERE email = '$email'" ; 
             
+            //Inicializamos la transacción
+            $this->db->beginTransaction();
             $query = $this->db->query($sql);
          
             //Supervisamos si la inserción se realizó correctamente... 
             if ($query) {
+               $this->db->commit();
                $return["correct"] = TRUE;
             } 
 
          }catch (PDOException $ex) {
+            $this->db->rollback();
             $return["error"] = $ex->getMessage();
          }
          return $return; 
@@ -444,7 +460,8 @@ class UserModel extends BaseModel
          }
             
          
-
+         //Inicializamos la transacción
+         $this->db->beginTransaction();
          $query_count=$this->db->query($sql_count);//Para contar elementos que hay sin paginacion
 
          //Supervisamos que la consulta se realizó correctamente... 
@@ -465,6 +482,7 @@ class UserModel extends BaseModel
             $query = $this->db->query($sql);
 
              $row = $query;
+             $this->db->commit();
              $return["correct"] = TRUE;
 
             foreach ($row as $r) {
@@ -474,6 +492,7 @@ class UserModel extends BaseModel
             $return["count"]=$count;
          } 
       } catch (PDOException $ex) {
+         $this->db->rollback();
          $return["error"] = $ex->getMessage();
       } 
 
@@ -500,15 +519,20 @@ class UserModel extends BaseModel
          try {
 
             $sql = "DELETE FROM usuario WHERE id = ".$id;
+
+            //Inicializamos la transacción
+            $this->db->beginTransaction();
             $query = $this->db->query($sql);
 
             //Supervisamos si la eliminación se realizó correctamente... 
             if ($query) {
+               $this->db->commit();
                $return["correct"] = TRUE;
                
             } 
 
          } catch (PDOException $ex) {
+            $this->db->rollback();
             $return["error"] = $ex->getMessage();
          }
       } else {
@@ -571,14 +595,18 @@ class UserModel extends BaseModel
          //Por ultimo, insertamos el dato único que será el id para más seguridad que el email.
          $sql=$sql . " WHERE id = '$id'";
          
+         //Inicializamos la transacción
+         $this->db->beginTransaction();
          $query = $this->db->query($sql);
       
          //Supervisamos si la inserción se realizó correctamente... 
          if ($query) {
+            $this->db->commit();
             $return["correct"] = TRUE;
          } 
 
       }catch (PDOException $ex) {
+         $this->db->rollback();
          $return["errors"]["db"] = $ex->getMessage();
       }
       return $return;
@@ -623,15 +651,19 @@ class UserModel extends BaseModel
                   VALUES 
                   ('$nif', '$nombre', '$apellidos','$email',  MD5('$password'),  '$telefono', '$direccion','$estado','$imagen', '$rol_id')" ;
 
+            //Inicializamos la transacción
+            $this->db->beginTransaction();
             $query = $this->db->query($sql);
 
          
             //Supervisamos si la inserción se realizó correctamente... 
             if ($query) {
+               $this->db->commit();
                $return["correct"] = TRUE;
             } 
          }
       }catch (PDOException $ex) {
+         $this->db->rollback();
          $return["errors"]["generic"] = $ex->getMessage();
       }
 
@@ -659,14 +691,18 @@ class UserModel extends BaseModel
                 estado = '$estado' 
                   WHERE id = '$id'" ; 
             
+            //Inicializamos la transacción
+            $this->db->beginTransaction();
             $query = $this->db->query($sql);
          
             //Supervisamos si la inserción se realizó correctamente... 
             if ($query) {
+               $this->db->commit();
                $return["correct"] = TRUE;
             } 
 
          }catch (PDOException $ex) {
+            $this->db->rollback();
             $return["error"] = $ex->getMessage();
          }
          return $return;

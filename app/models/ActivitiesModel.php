@@ -163,16 +163,21 @@ class ActivitiesModel extends BaseModel
             try {
 
             $sql = "DELETE FROM actividades WHERE id = ".$id;
+
+            //Inicializamos la transacción
+            $this->db->beginTransaction();
             $query = $this->db->query($sql);
 
             //Supervisamos si la eliminación se realizó correctamente... 
             if ($query) {
+                $this->db->commit();
                 $return["correct"] = TRUE;
                 
             } 
 
             } catch (PDOException $ex) {
-            $return["error"] = $ex->getMessage();
+                $this->db->rollback();
+                $return["error"] = $ex->getMessage();
             }
         } else {
             $return["correct"] = FALSE;
@@ -202,14 +207,18 @@ class ActivitiesModel extends BaseModel
             $sql="UPDATE actividades SET 
              nombre = '$nombre', descripcion = '$descripcion', aforo = '$aforo' WHERE id = '$id'" ;
             
+            //Inicializamos la transacción
+            $this->db->beginTransaction();
             $query = $this->db->query($sql);
         
             //Supervisamos si la inserción se realizó correctamente... 
             if ($query) {
+                $this->db->commit();
                 $return["correct"] = TRUE;
             } 
 
         }catch (PDOException $ex) {
+            $this->db->rollback();
             $return["errors"]["db"] = $ex->getMessage();
         }
         return $return;
@@ -238,15 +247,19 @@ class ActivitiesModel extends BaseModel
                     VALUES 
                     ('$nombre', '$descripcion','$aforo')" ;
 
+            //Inicializamos la transacción
+            $this->db->beginTransaction();
             $query = $this->db->query($sql);
 
             
             //Supervisamos si la inserción se realizó correctamente... 
             if ($query) {
+                $this->db->commit();
                 $return["correct"] = TRUE;
             } 
             
         }catch (PDOException $ex) {
+            $this->db->rollback();
             $return["errors"]["generic"] = $ex->getMessage();
         }
 
