@@ -48,12 +48,17 @@ i{
     font-size: 25px;
 }
 
+i.peque{
+    font-size: 15px;
+    margin-left: 5px;
+}
+
 p.horaIni{
     color:#331856;
     font-size: 20px;
     font-family: 'Castoro', serif;
     margin-right: 10px;
-    margin-top: 4px;
+    margin-top: 15px;
 }
 
 a.sesion,button.adminUser, a.adminUser {
@@ -62,6 +67,14 @@ a.sesion,button.adminUser, a.adminUser {
 
 div.adminUser{
     text-align: left;
+}
+
+a.navColor, button.navColor{
+    color:#7650A6!important;
+    font-family: 'Castoro', serif;
+    margin-top: 5px;
+    font-weight: bold;
+
 }
 /*------FIN NAV BAR------*/
 
@@ -254,6 +267,18 @@ td.errorTable{
     color: white;
 }
 
+a.btn-nuev{
+    background-color:#A895C1  ;
+    font-weight: bold;
+    border: 1px solid #7650A6;
+    height: 39px;
+    position: absolute;
+    right: 0%;
+}
+
+i.fe{
+    color: #F0EBF5;
+}
 
 /*----------------------------------AdminEditUserView.php------------------------------*/
 div.formAdminEU{
@@ -310,8 +335,16 @@ div.buscarListAct{
     font-size: 13px;
 }
 
+div.activity{
+    margin-top: 25px;
+}
+
 nav.pagAct{
     margin-left: 12%;
+}
+
+a.btn-nuevAct{
+    right: 12%;
 }
 
 /*----------------------------------EditActivitiesView.php------------------------------*/

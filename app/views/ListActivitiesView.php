@@ -34,7 +34,7 @@
     </div> 
     <div class="tablaListActivities">
 
-        <div class="input-group">            
+        <div class="input-group activity">            
             <nav aria-label="Page navigation example" class="pagAct">
                 <ul class="pagination">
                     <li class="page-item">
@@ -70,6 +70,9 @@
                     <a class="dropdown-item" href="index.php?controller=adminActivities&action=listActivities&pagina=1&rxp=8<?php echo $url ?>">8 registros</a>
                     <a class="dropdown-item" href="index.php?controller=adminActivities&action=listActivities&pagina=1&rxp=10<?php echo $url ?>">10 registros</a>
                 </div>
+            </div>
+            <div>
+                <a href="index.php?controller=adminActivities&action=createActivities" class="btn btn-nuev btn-nuevAct " role="button"><i class="fas fa-plus-square fe"> Nueva actividad</i></a>
             </div>
         </div>
 

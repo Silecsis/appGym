@@ -40,8 +40,8 @@
             <br>
 
             <div class=" text-right">
+                <button type="button" class="btn btn-secondary" onclick="location.href='index.php?controller=adminActivities&action=listActivities&pagina=1&rxp=10'">Volver a "Listar actividades"</button>
                 <?php if(isset($_GET["id"])){ ?>	
-                    <button type="button" class="btn btn-secondary" onclick="location.href='index.php?controller=adminActivities&action=listActivities&pagina=1&rxp=10'">Volver a "Listar actividades"</button>
                     <input type="submit" name="submit" value="Editar actividad"  class="btn btn-primary"/> 
                 <?php }else{ ?>
                     <input type="submit" name="submit" value="Crear actividad"  class="btn btn-primary"/> 

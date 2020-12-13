@@ -93,6 +93,11 @@
                     <a class="dropdown-item" href="index.php?controller=adminUser&action=listUser&pagina=1&rxp=10<?php echo $url ?>">10 registros</a>
                 </div>
             </div>
+            
+            <div>
+                <a href="index.php?controller=adminUser&action=createUser" class="btn btn-nuev " role="button"><i class="fas fa-plus-square fe"> Nuevo usuario</i></a>
+            </div>
+
         </div>
         <table id="tablePreview" class="table table-striped table-sm table-hover table-bordered tabalListUser">
             <thead class="listUser">
