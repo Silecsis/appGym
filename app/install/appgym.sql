@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-12-2020 a las 22:13:04
+-- Tiempo de generación: 14-12-2020 a las 12:39:00
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.2.34
 
@@ -39,11 +39,35 @@ CREATE TABLE `actividades` (
 --
 
 INSERT INTO `actividades` (`id`, `nombre`, `descripcion`, `aforo`) VALUES
-(1, 'bodybalance', 'aqui va una descripción', 5),
-(2, 'blah', 'sd', 5),
-(3, 'bodybalance', 'aqui va una descripción', 5),
-(4, 'bodybalance', 'aqui va una descripción', 5),
-(5, 'gagag', 'aqui va una descripción', 5);
+(1, 'Bodybalance', 'Combina yoga, estiramientos, pilates y taichi para entrenar de forma suave pero efectiva, relajarse y equilibrar cuerpo y mente.', 7),
+(2, 'Dance', 'Haz cardio con los movimientos de baile de nuestros monitores', 10),
+(3, 'Yoga', 'Conjunto de técnicas de concentración derivadas de esta doctrina filosófica que se practican para conseguir un mayor control físico y mental.', 10),
+(4, 'Taichí', 'Arte marcial milenario de origen chino que otorga muchos beneficios para la salud. El taichi es una disciplina ancestral que ofrece relajación, reduce', 7),
+(5, 'Ciclo', 'Conjunto de actividades que mejoran la resistencia.', 8),
+(10, 'Pilates', 'Breve desc', 15);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `dias`
+--
+
+CREATE TABLE `dias` (
+  `id` int(11) NOT NULL,
+  `dia` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `dias`
+--
+
+INSERT INTO `dias` (`id`, `dia`) VALUES
+(1, 'Lunes'),
+(2, 'Martes'),
+(3, 'Miércoles'),
+(4, 'Jueves'),
+(5, 'Viernes'),
+(6, 'Sábado');
 
 -- --------------------------------------------------------
 
@@ -63,6 +87,32 @@ CREATE TABLE `rol` (
 INSERT INTO `rol` (`id`, `tipo`) VALUES
 (1, 'admin'),
 (2, 'socio');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tramos`
+--
+
+CREATE TABLE `tramos` (
+  `id` int(11) NOT NULL,
+  `dia` int(50) NOT NULL,
+  `hora_inicio` time NOT NULL,
+  `hora_fin` time NOT NULL,
+  `actividad_id` int(11) NOT NULL,
+  `fecha_alta` date NOT NULL,
+  `fecha_baja` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `tramos`
+--
+
+INSERT INTO `tramos` (`id`, `dia`, `hora_inicio`, `hora_fin`, `actividad_id`, `fecha_alta`, `fecha_baja`) VALUES
+(1, 3, '07:15:00', '08:15:00', 2, '2020-12-07', NULL),
+(3, 3, '07:00:00', '08:15:00', 5, '2020-12-07', NULL),
+(5, 1, '07:15:00', '08:15:00', 10, '2020-12-07', NULL),
+(6, 2, '07:15:00', '08:30:00', 4, '2020-12-07', NULL);
 
 -- --------------------------------------------------------
 
@@ -99,7 +149,8 @@ INSERT INTO `usuario` (`id`, `nif`, `nombre`, `apellidos`, `email`, `password`, 
 (48, '29747147M', 'asdd', 'asdd', 'a123s333d@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 0, 'avatar5fd4d78ed31115.94284723.png', 2),
 (49, '29747147M', 'asdd', 'asdd', 'asas22ad333@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 0, 'avatar5fd4d8d233cbb9.70696708.png', 2),
 (50, '29747147M', 'asdd', 'asdd', 'as11as22ad@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d7a99a7bb4.76166243.png', 1),
-(51, '29747147M', 'asdd', 'asdd', 'a11sd3@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d8685ab723.91289395.png', 1);
+(51, '29747147M', 'asdd', 'asdd', 'a11sd3@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d8685ab723.91289395.png', 1),
+(55, '49086023K', 'MJ', 'Cam Gar', 'silecsis@gmail.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd6075f86b8e2.36240738.png', 2);
 
 --
 -- Índices para tablas volcadas
@@ -112,10 +163,24 @@ ALTER TABLE `actividades`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `dias`
+--
+ALTER TABLE `dias`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `rol`
 --
 ALTER TABLE `rol`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tramos`
+--
+ALTER TABLE `tramos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `dia` (`dia`),
+  ADD KEY `actividad_id` (`actividad_id`);
 
 --
 -- Indices de la tabla `usuario`
@@ -133,7 +198,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `actividades`
 --
 ALTER TABLE `actividades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `dias`
+--
+ALTER TABLE `dias`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
@@ -142,14 +213,27 @@ ALTER TABLE `rol`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT de la tabla `tramos`
+--
+ALTER TABLE `tramos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `tramos`
+--
+ALTER TABLE `tramos`
+  ADD CONSTRAINT `tramos_ibfk_1` FOREIGN KEY (`dia`) REFERENCES `dias` (`id`),
+  ADD CONSTRAINT `tramos_ibfk_2` FOREIGN KEY (`actividad_id`) REFERENCES `actividades` (`id`);
 
 --
 -- Filtros para la tabla `usuario`

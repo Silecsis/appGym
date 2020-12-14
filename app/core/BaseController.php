@@ -53,7 +53,26 @@ abstract class BaseController
          ];
 
          $this->redirect(DEFAULT_CONTROLLER,DEFAULT_ACTION,$params);
-      }
-      
+      } 
    }
+   
+   /**
+    * Manda a error si intentan entrar por URL estando logado pero sin ser admin.
+    *
+    * @param [type] $name
+    * @param [type] $controller
+    * @param [type] $action
+    * @param array $vars
+    * @return void
+    */
+   public function adminView($name, $controller,$action, $vars = array()){
+      //Cuando estamos logados pero no somos administradores.
+      if (!$this->view->adminAuthShow($name, $vars)){
+         $params=[
+            "type"=>"noAdmin"
+         ];
+         $this->redirect("error","index",$params);
+      } 
+   }
+   
 }

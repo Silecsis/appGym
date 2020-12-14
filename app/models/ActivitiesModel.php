@@ -101,7 +101,7 @@ class ActivitiesModel extends BaseModel
                 }
 
                 if($aforo!=""){
-                    array_push($aforo,"aforo = '".$aforo."'");
+                    array_push($conditions,"aforo = '".$aforo."'");
                 }
 
                 $sql=$sql.join(" and ",$conditions);
@@ -261,6 +261,36 @@ class ActivitiesModel extends BaseModel
         }catch (PDOException $ex) {
             $this->db->rollback();
             $return["errors"]["generic"] = $ex->getMessage();
+        }
+
+        return $return;
+   }
+
+   /**
+    * Recoge todas las actividades sin filtrar.
+    *
+    * @return void
+    */
+   public function getAllActivities()
+   {
+        $return = [
+            "correct" => FALSE,
+            "data" => NULL,
+            "error" => NULL
+        ];
+        //Realizamos la consulta...
+        try {  
+            //Definimos la instrucción SQL  
+            $sql = "SELECT * FROM actividades";
+            // Hacemos directamente la consulta al no tener parámetros
+            $resultsquery = $this->db->query($sql);
+            //Supervisamos si la inserción se realizó correctamente... 
+            if ($resultsquery) :
+            $return["correct"] = TRUE;
+            $return["data"] = $resultsquery->fetchAll(PDO::FETCH_ASSOC);
+            endif; // o no :(
+        } catch (PDOException $ex) {
+            $return["error"] = $ex->getMessage();
         }
 
         return $return;
