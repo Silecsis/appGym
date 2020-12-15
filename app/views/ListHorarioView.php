@@ -15,7 +15,7 @@
             <form action="" method="GET" >
                 <!--Daba fallos el action, por eso lo he metido con estos botones.-->
                 <input type="hidden" name="controller" value="adminTramos"/>
-                <input type="hidden" name="action" value="listTramos"/>
+                <input type="hidden" name="action" value="listHorario"/>
                 <input type="hidden" name="pagina" value="<?php echo $_GET["pagina"] ?>"/>
                 <input type="hidden" name="rxp" value="<?php echo $_GET["rxp"] ?>"/>
 
