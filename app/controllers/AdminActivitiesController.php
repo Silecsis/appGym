@@ -89,7 +89,7 @@ class AdminActivitiesController extends BaseController
             $this->redirect("error","index",$params);
         }
 
-        $this->adminView("listActivities",$params);
+        $this->adminView("listActivities","AdminActivities","listActivities",$params);
         
    }
 
@@ -240,7 +240,7 @@ class AdminActivitiesController extends BaseController
                     $params=[
                         "errors"=>$createCorrect["errors"],
                     ];
-                    $this->adminView("editActivities",$params);
+                    $this->adminView("editActivities","adminActivities","createActivities",$params);
                 }
             }
         }else if(!isset($_POST["submit"]) && $_SESSION["usuario"]["rol_id"]!=1){
@@ -250,7 +250,7 @@ class AdminActivitiesController extends BaseController
             $this->redirect("error","index",$params);
 
         }else{
-            $this->adminView("editActivities");
+            $this->adminView("editActivities","adminActivities","createActivities");
         }  
    }
 

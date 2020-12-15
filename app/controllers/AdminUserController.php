@@ -92,7 +92,7 @@ class AdminUserController extends BaseController
          $this->redirect("error","index",$params);
       }
 
-      $this->view->adminView("adminListUser",$params);
+      $this->adminView("adminListUser","adminUser","listUser",$params);
    }
 
 
@@ -296,7 +296,7 @@ class AdminUserController extends BaseController
                $params=[
                   "errors"=>$createCorrect["errors"],
                ];
-               $this->adminView("adminEditUser",$params);
+               $this->adminView("adminEditUser","adminUser","createUser",$params);
             }
          }
       }else if(!isset($_POST["submit"]) && $_SESSION["usuario"]["rol_id"]!=1){
@@ -306,7 +306,7 @@ class AdminUserController extends BaseController
          $this->redirect("error","index",$params);
 
       }else{
-         $this->adminView("adminEditUser");
+         $this->adminView("adminEditUser","adminUser","createUser");
       }  
    }
 
