@@ -91,10 +91,14 @@
         <table id="tablePreview" class="table table-striped table-sm table-hover table-bordered tabalListUser">
             <thead class="listUser">
                 <tr>
-                    <th>Hora</th>
-                    <?php foreach ($days as $dd) :?>
-                        <th><?php echo $dd["dia"]?></th>
-                    <?php endforeach; ?>
+                    <th>ID</th>
+                    <th>Día</th>
+                    <th>Hora de inicio</th>
+                    <th>Hora de fin</th>
+                    <th>Actividad</th>
+                    <th>Fecha de alta</th>
+                    <th>Fecha de baja</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>  
@@ -105,27 +109,33 @@
                        No existe ningún tramo con los parámetros de busqueda indicados en nuestra base de datos . 
                     </td>
                 </tr>
-            <?php }else{ foreach ($data["tramos"] as $t) : ?>
+                <?php }else{ foreach ($data["tramos"] as $t) : ?>
                 <tr>
-                    <!--Le meto la función substring para que no muestre los segundos-->
-                    <td><?php echo substr($t["hora_inicio"], 0, -3)." - ".substr($t["hora_fin"], 0, -3)?></td>
-                    <!--Recorro los 3 arrays para que me imprima el nombre de la actividad en el día de la semana correspondiente-->
-                    <?php foreach ($days as $d) :?>
-                        <td>
-
-                            <?php if($t[$d["id"]]){
-                                    foreach ($activities as $a) : 
-                                        if($a["id"]==$t[$d["id"]]["actividad_id"]){ 
-                                            echo $a["nombre"];
-                                        }
-                                    endforeach; ?> 
-                                    <?php if($_SESSION["usuario"]["rol_id"]==1){ ?>
-                                        <a href="<?= $d['id']."&rxp=".$_GET["rxp"] ?>" class="listUser"><i class="fas fa-edit peque"></i></a>
-                                        <a href="<?= $d['id']."&rxp=".$_GET["rxp"].$url.'&pagina='.$_GET['pagina'] ?>" class="listUser"><i class="far fa-trash-alt peque"></i></a>
-                                    <?php }?>
-                            <?php } ?>
-                        </td>
-                    <?php endforeach; ?>
+                    <td><?= $t["id"]?></td>
+                    <td>
+                        <?php foreach ($days as $d) :
+                                if($t["dia"]==$d["id"]){
+                                    echo $d["dia"];
+                                }
+                            endforeach;
+                        ?>
+                    </td>
+                    <td><?= $t["hora_inicio"] ?></td>
+                    <td><?= $t["hora_fin"] ?></td>
+                    <td>
+                        <?php foreach ($activities as $a) :
+                                if($t["actividad_id"]==$a["id"]){
+                                    echo $a["nombre"];
+                                }
+                            endforeach;
+                        ?>
+                    </td>
+                    <td><?= $t["fecha_alta"] ?></td>
+                    <td><?php if($t["fecha_baja"]==null){echo "No hay fecha de baja";}?></td>
+                    <td>
+                        <a href="<?= $t['id']."&rxp=".$_GET["rxp"] ?>" class="listUser"><i class="fas fa-edit"></i>Editar </a>
+                        <a href="<?= $t['id']."&rxp=".$_GET["rxp"].$url.'&pagina='.$_GET['pagina'] ?>" class="listUser"><i class="far fa-trash-alt"></i>Eliminar</a>
+                    </td>
                 </tr>
             <?php endforeach;} ?>
             </tbody>

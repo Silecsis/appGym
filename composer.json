@@ -1,0 +1,12 @@
+{
+    "name": "silecsis/proyectos",
+    "authors": [
+        {
+            "name": "MJ",
+            "email": "silecsis@gmail.com"
+        }
+    ],
+    "require": {
+        "spipu/html2pdf": "*"
+    }
+}

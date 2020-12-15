@@ -374,3 +374,32 @@ h2.recordatorio{
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+/*----------------------------------impriHorarioView.php------------------------------*/
+thead.impri{
+    background-color:#CDC3DA;
+    text-align: center;
+    color:#331856;
+}
+
+div.impri{
+    padding-left: 75px;
+}
+
+div.impriH4{
+    text-align: center;
+    color:#331856;
+}
+
+th.impri{
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+}
+
+td.impri{
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    text-align: center;
+}

@@ -30,7 +30,11 @@
                                     <li class="nav-item">
                                         <!--Actividades dirigidas-->
                                         <a class="nav-link waves-effect waves-light navColor" href="index.php?controller=adminActivities&action=listActivities&pagina=1&rxp=10">Actividades</a>
-                                </li>
+                                    </li>
+                                    <li class="nav-item">
+                                        <!--Actividades dirigidas-->
+                                        <a class="nav-link waves-effect waves-light navColor" href="index.php?controller=adminTramos&action=listTramos&pagina=1&rxp=10">Tramos</a>
+                                    </li>
                                 <?php }?>
 
                                 <li class="nav-item">

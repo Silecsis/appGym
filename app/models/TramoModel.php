@@ -71,9 +71,9 @@ class TramoModel extends BaseModel
             ];
         
         try {
-            $sql="SELECT * FROM tramos" ; 
+            $sql="SELECT *  FROM tramos as t join actividades as a on (t.actividad_id=a.id)" ; 
 
-            $sql_count="SELECT count(id) as count FROM tramos" ;
+            $sql_count="SELECT count(t.id) as count FROM tramos as t join actividades as a on (t.actividad_id=a.id)" ;
 
             if($dia!="" || $hora_inicio!="" || $hora_fin!="" || $actividad_id!=""){
                 $sql=$sql." WHERE ";
@@ -101,6 +101,8 @@ class TramoModel extends BaseModel
                 $sql=$sql.join(" and ",$conditions);
                 $sql_count=$sql_count.join(" and ",$conditions);//Para contar elementos que hay sin paginacion
             }
+             //Para ordenar el horario.
+             $sql=$sql." ORDER BY t.hora_inicio, t.hora_fin";
 
             $query_count=$this->db->query($sql_count);//Para contar elementos que hay sin paginacion
 

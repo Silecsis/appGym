@@ -6,6 +6,7 @@
 require_once MODELS_FOLDER . "TramoModel.php";
 require_once MODELS_FOLDER . "DiasModel.php";
 require_once MODELS_FOLDER . "ActivitiesModel.php";
+use Spipu\Html2Pdf\Html2Pdf;
 
 /**
  * Clase controlador que será la encargada de obtener, para cada tarea, los datos
@@ -85,6 +86,12 @@ class AdminTramosController extends BaseController
                 "days"=>$dias["data"],
                 "activities"=>$actividades["data"]
             ];
+        }else if(!isset($_GET["submit"]) && $_SESSION["usuario"]["rol_id"]!=1){
+            $params=[
+                "type"=>"noAdmin"
+            ];
+            $this->redirect("error","index",$params);
+
         }else{
             $params=[
                 "type"=>"unexpected"
@@ -96,6 +103,8 @@ class AdminTramosController extends BaseController
         
    }
 
+
+//----------------------------------------------------------Horario------------------------------------------
    /**
     * Muestra el horario agrupado por hora de inicio y hora de fin del tramo.
     * Lo muestra también por búsqueda
@@ -117,7 +126,7 @@ class AdminTramosController extends BaseController
     }
 
     if(isset($_GET["submit"])){
-        $tramos=$this->modelo->listTramos($_GET["pagina"],$rxp,$_GET["dia"],$_GET["hora_inicio"],$_GET["hora_fin"],$_GET["actividad_id"]);
+        $tramos=$this->modelo->listHorario($_GET["pagina"],$rxp,$_GET["dia"],$_GET["hora_inicio"],$_GET["hora_fin"],$_GET["actividad_id"]);
         $totalRegistros=$tramos["count"];
 
         $paginas=$totalRegistros/$rxp;
@@ -127,7 +136,7 @@ class AdminTramosController extends BaseController
         $url="&dia={$_GET["dia"]}&hora_inicio={$_GET["hora_inicio"]}&hora_fin={$_GET["hora_fin"]}&actividad_id={$_GET["actividad_id"]}&submit=Buscar";
         
     }else{
-        $tramos=$this->modelo->listTramos($_GET["pagina"],$rxp); 
+        $tramos=$this->modelo->listHorario($_GET["pagina"],$rxp); 
         $totalRegistros=$this->modelo->countTotalTable();
 
         $paginas=$totalRegistros/$rxp;
@@ -152,5 +161,58 @@ class AdminTramosController extends BaseController
     }
 
     $this->authView("listHorario","adminController","listTramos",$params);
+   }
+
+
+   
+
+    /**
+     * Imprime el horario en pdf. Imprime la vista impriHorarioView.php
+     *
+     * @return void
+     */
+    public function imprimirHorario()
+   {
+        //Deberemos llamar a los otros modelos para que nos cargue los dias y actividadees por nombre en vez de por id.
+        $diasModel= new DiasModel();
+        $dias=$diasModel->listDias();
+
+        $actividadesModel= new ActivitiesModel();
+        $actividades=$actividadesModel->getAllActivities();
+
+        $tramos=$this->modelo->listHorario(); 
+        $totalRegistros=$this->modelo->countTotalTable();
+
+        if($tramos["correct"] && $dias["correct"] && $actividades["correct"]){
+            //Si todo es correcto, imprimimos.
+
+            require 'vendor/autoload.php';
+   
+            $parametros = [
+               "horario" => $tramos
+            ];
+   
+            $params=[
+               "data"=>$tramos,
+               "days"=>$dias["data"],
+               "activities"=>$actividades["data"]
+           ];
+            ob_start();
+            $this->view->showBody("impriHorario", $params);
+            $html = ob_get_clean();
+            $html2pdf = new Html2Pdf('P', 'A4', 'es', 'true', 'UTF-8');
+            $html2pdf->writeHTML($html);
+            $html2pdf->output("horario_gimnasio_lavanda.pdf"); // Como parámetro opcional nombre de fichero a descargar
+            ob_end_clean();
+        }else{
+            //Sino, manda a un lugar de error
+            $params=[
+                "type"=>"unexpected"
+            ];
+            $this->redirect("error","index",$params);
+        }
+        
+
+
    }
 }

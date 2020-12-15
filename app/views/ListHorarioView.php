@@ -81,12 +81,9 @@
                     <a class="dropdown-item" href="index.php?controller=adminTramos&action=listHorario&pagina=1&rxp=10<?php echo $url ?>">10 registros</a>
                 </div>
             </div>
-            <?php if($_SESSION["usuario"]["rol_id"]==1){ ?>
-                <div>
-                    <a href="index.php?controller=adminTramos&action=listTramos&pagina=1&rxp=10" class="btn btn-nuev " role="button"><i class="fas fa-plus-square fe"> Listar tramos</i></a>
-                </div>
-            <?php } ?>
-
+            <div>
+                <a href="index.php?controller=adminTramos&action=imprimirHorario" class="btn btn-nuev " role="button"><i class="fas fa-plus-square fe"> Imprimir Horario</i></a>
+            </div>
         </div>
         <table id="tablePreview" class="table table-striped table-sm table-hover table-bordered tabalListUser">
             <thead class="listUser">
