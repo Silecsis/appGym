@@ -3,6 +3,9 @@
         Además, tendrá el campo de búsqueda.-->
 
 <div class="listUser">
+    <div class="identificar text-center">
+        <h4> Usuarios </h4>
+    </div>
     <div class="buscarListUser">
         <fieldset class="scheduler-border">
             <legend  class="scheduler-border">

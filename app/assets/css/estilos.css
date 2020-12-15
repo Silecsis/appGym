@@ -280,6 +280,11 @@ i.fe{
     color: #F0EBF5;
 }
 
+div.identificar{
+    font-family: 'Big Shoulders Stencil Display', cursive;
+    margin-top: 25px;
+}
+
 /*----------------------------------AdminEditUserView.php------------------------------*/
 div.formAdminEU{
     margin-bottom: 50px;

@@ -17,6 +17,8 @@ define('DEFAULT_ACTION', 'index');
 
 define('DEFAULT_LOGGED_CONTROLLER', 'home');
 define('DEFAULT_LOGGED_ACTION', 'index');
+define('DEFAULT_EMAIL_ADMIN','anissa.jenkins@ethereal.email');
+define('DEFAULT_PASSWORD_ADMIN','uUTxyuGQJuMkpJQGU5');
 
 
 //------------Parámetros base de datos:----------------

@@ -80,13 +80,13 @@ class PasswordController extends BaseController{
                     $mail->isSMTP();
                     $mail->Host = 'smtp.ethereal.email'; //Se deberá modificar según la extensión del Username (ejemplo: para gmail: smtp.gmail.com)
                     $mail->SMTPAuth = true;
-                    $mail->Username = 'anissa.jenkins@ethereal.email';//Se deberá modificar por el email del cual se quiera enviar los correos.
-                    $mail->Password = 'uUTxyuGQJuMkpJQGU5'; //Se deberá modificar por la contraseña del email del cual se quiera enviar los correos.
+                    $mail->Username = DEFAULT_EMAIL_ADMIN;//Se deberá modificar por el email del cual se quiera enviar los correos.
+                    $mail->Password = DEFAULT_PASSWORD_ADMIN; //Se deberá modificar por la contraseña del email del cual se quiera enviar los correos.
                     $mail->SMTPSecure = 'tls';
                     $mail->Port = 587;
 
                     //Recipients
-                    $mail->setFrom('anissa.jenkins@ethereal.email', 'APPGYM');//Se deberá modificar por el email del cual se quiera enviar los correos.
+                    $mail->setFrom(DEFAULT_EMAIL_ADMIN, 'APPGYM');//Se deberá modificar por el email del cual se quiera enviar los correos.
                     $mail->addAddress($_POST["emailUser"]); 
 
                     // Content

@@ -78,27 +78,6 @@ class AdminTramosController extends BaseController
 
         if($tramos["correct"] && $dias["correct"] && $actividades["correct"]){
 
-            // $listHorasTramos=[];
-            // $listHorasProcesadas=[];//Para no repetir horas ya integradas.
-
-            // for ($tr=0;$tr<length($tramos["data"]);$tr++){
-            //     $trAct=$tramos["data"][$tr];
-
-            //     //in_array devuelve true/false
-            //     if(!in_array($listHorasProcesadas,$trAct["hora_inicio"])){
-            //         array_push($listHorasProcesadas,$trAct["hora_inicio"]);
-
-            //         //+1 porque busco en el siguente, no al mismo registtro.
-            //         for ($tr2=$tr+1;$tr2<length($tramos["data"]);$tr2++){
-            //             $trAct2=$tramos["data"][$tr2];;
-            //             if($trAct["hora_inicio"]==$trAct2["hora_inicio"]){
-
-            //             }
-            //         }
-
-            //     }
-            // }
-
             $params=[
                 "data"=>$tramos,
                 "paginas"=>$paginas, //Para que lleve el num de páginas a la vista
@@ -115,5 +94,63 @@ class AdminTramosController extends BaseController
 
         $this->authView("listTramos","adminController","listTramos",$params);
         
+   }
+
+   /**
+    * Muestra el horario agrupado por hora de inicio y hora de fin del tramo.
+    * Lo muestra también por búsqueda
+    *
+    * @return void
+    */
+   public function listHorario()
+   {
+    $diasModel= new DiasModel();
+    $dias=$diasModel->listDias();
+
+    $actividadesModel= new ActivitiesModel();
+    $actividades=$actividadesModel->getAllActivities();
+
+    if(isset($_GET["rxp"])){
+        $rxp=$_GET["rxp"];
+    }else{
+        $rxp=PAGE_SIZE;
+    }
+
+    if(isset($_GET["submit"])){
+        $tramos=$this->modelo->listTramos($_GET["pagina"],$rxp,$_GET["dia"],$_GET["hora_inicio"],$_GET["hora_fin"],$_GET["actividad_id"]);
+        $totalRegistros=$tramos["count"];
+
+        $paginas=$totalRegistros/$rxp;
+        //Si lo dividimos, es probable que de un número decimal, en cuyo caso daría el total de páginas de la parte entera, no de la decimal.
+        //Por ello, hacemos lo siguiente para que redondee el número hacia arriba.
+        $paginas=ceil($paginas);
+        $url="&dia={$_GET["dia"]}&hora_inicio={$_GET["hora_inicio"]}&hora_fin={$_GET["hora_fin"]}&actividad_id={$_GET["actividad_id"]}&submit=Buscar";
+        
+    }else{
+        $tramos=$this->modelo->listTramos($_GET["pagina"],$rxp); 
+        $totalRegistros=$this->modelo->countTotalTable();
+
+        $paginas=$totalRegistros/$rxp;
+        $paginas=ceil($paginas);
+        $url="";
+    }
+
+    if($tramos["correct"] && $dias["correct"] && $actividades["correct"]){
+
+        $params=[
+            "data"=>$tramos,
+            "paginas"=>$paginas, //Para que lleve el num de páginas a la vista
+            "url"=>$url,
+            "days"=>$dias["data"],
+            "activities"=>$actividades["data"]
+        ];
+    }else{
+        $params=[
+            "type"=>"unexpected"
+        ];
+        $this->redirect("error","index",$params);
+    }
+
+    $this->authView("listHorario","adminController","listTramos",$params);
    }
 }

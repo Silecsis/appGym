@@ -1,10 +1,10 @@
-<!--Vista de "listar tramos" desde admin.
-        Es la vista que carga los tramos de la BBDD.
-        Además, tendrá el campo de búsqueda.-->
+<!--Vista de "listar horario" desde todos los uduarios.
+        Es la vista que carga los tramos agrupados por hora inicio y hora fin de la BBDD.
+        Además, tendrá el campo de búsqueda para mirar en el horario.-->
 
 <div class="listUser">
     <div class="identificar text-center">
-        <h4> Tramos </h4>
+        <h4> Horario </h4>
     </div>
     <div class="buscarListUser">
         <fieldset class="scheduler-border">
@@ -48,7 +48,7 @@
                 <ul class="pagination">
                     <li class="page-item">
                     <!--Para ir a la página anterior, le restamos 1 a la pagina recibida por el get-->
-                        <a class="page-link pag" href="index.php?controller=adminTramos&action=listTramos&pagina=<?php $pagAct=$_GET["pagina"]; if($pagAct>1){$pagAct=$pagAct-1;}else{$pagAct==1;}echo $pagAct."&rxp=".$_GET["rxp"].$url;?>" aria-label="Previous">
+                        <a class="page-link pag" href="index.php?controller=adminTramos&action=listHorario&pagina=<?php $pagAct=$_GET["pagina"]; if($pagAct>1){$pagAct=$pagAct-1;}else{$pagAct==1;}echo $pagAct."&rxp=".$_GET["rxp"].$url;?>" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                             <span class="sr-only">Anterior</span>
                         </a>
@@ -56,11 +56,11 @@
 
                     <?php for ($i=1;$i<=$paginas;$i++): ?>
                     <li class="page-item">
-                        <a class="page-link pag <?php if($_GET["pagina"]==$i){ echo "page-item-selected";}?>" href="index.php?controller=adminTramos&action=listTramos&pagina=<?php echo $i."&rxp=".$_GET["rxp"].$url?>"><?php echo $i ?></a></li>
+                        <a class="page-link pag <?php if($_GET["pagina"]==$i){ echo "page-item-selected";}?>" href="index.php?controller=adminTramos&action=listHorario&pagina=<?php echo $i."&rxp=".$_GET["rxp"].$url?>"><?php echo $i ?></a></li>
                     <?php endfor ?>
 
                     <li class="page-item">
-                        <a class="page-link pag" href="index.php?controller=adminTramos&action=listTramos&pagina=<?php $pagAct=$_GET["pagina"]; if($pagAct<$paginas){$pagAct=$pagAct+1;}else{$pagAct==$paginas;}echo $pagAct."&rxp=".$_GET["rxp"].$url;?>" aria-label="Next">
+                        <a class="page-link pag" href="index.php?controller=adminTramos&action=listHorario&pagina=<?php $pagAct=$_GET["pagina"]; if($pagAct<$paginas){$pagAct=$pagAct+1;}else{$pagAct==$paginas;}echo $pagAct."&rxp=".$_GET["rxp"].$url;?>" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                             <span class="sr-only">Siguiente</span>
                         </a>
@@ -75,15 +75,15 @@
                     <?php if(isset($_GET["rxp"])){ echo $_GET["rxp"];}else{ echo PAGE_SIZE;}?> registros x pág
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <a class="dropdown-item" href="index.php?controller=adminTramos&action=listTramos&pagina=1&rxp=2<?php echo $url ?>" >2 registros</a>
-                    <a class="dropdown-item" href="index.php?controller=adminTramos&action=listTramos&pagina=1&rxp=6<?php echo $url ?>">6 registros</a>
-                    <a class="dropdown-item" href="index.php?controller=adminTramos&action=listTramos&pagina=1&rxp=8<?php echo $url ?>">8 registros</a>
-                    <a class="dropdown-item" href="index.php?controller=adminTramos&action=listTramos&pagina=1&rxp=10<?php echo $url ?>">10 registros</a>
+                    <a class="dropdown-item" href="index.php?controller=adminTramos&action=listHorario&pagina=1&rxp=2<?php echo $url ?>" >2 registros</a>
+                    <a class="dropdown-item" href="index.php?controller=adminTramos&action=listHorario&pagina=1&rxp=6<?php echo $url ?>">6 registros</a>
+                    <a class="dropdown-item" href="index.php?controller=adminTramos&action=listHorario&pagina=1&rxp=8<?php echo $url ?>">8 registros</a>
+                    <a class="dropdown-item" href="index.php?controller=adminTramos&action=listHorario&pagina=1&rxp=10<?php echo $url ?>">10 registros</a>
                 </div>
             </div>
             <?php if($_SESSION["usuario"]["rol_id"]==1){ ?>
                 <div>
-                    <a href="" class="btn btn-nuev " role="button"><i class="fas fa-plus-square fe"> Nuevo tramo</i></a>
+                    <a href="index.php?controller=adminTramos&action=listTramos&pagina=1&rxp=10" class="btn btn-nuev " role="button"><i class="fas fa-plus-square fe"> Listar tramos</i></a>
                 </div>
             <?php } ?>
 
@@ -102,7 +102,7 @@
             <?php if(isset($data["count"]) && $data["count"] == "0"){ ?>
                 <tr>
                     <td colspan="12" class="errorTable">
-                       No existe ningún tramo con los parámetros de busqueda indicados en nuestra base de datos . 
+                       No existe ninguna franja horaria con los parámetros de busqueda indicados en nuestra base de datos . 
                     </td>
                 </tr>
             <?php }else{ foreach ($data["tramos"] as $t) : ?>
@@ -119,10 +119,6 @@
                                             echo $a["nombre"];
                                         }
                                     endforeach; ?> 
-                                    <?php if($_SESSION["usuario"]["rol_id"]==1){ ?>
-                                        <a href="<?= $d['id']."&rxp=".$_GET["rxp"] ?>" class="listUser"><i class="fas fa-edit peque"></i></a>
-                                        <a href="<?= $d['id']."&rxp=".$_GET["rxp"].$url.'&pagina='.$_GET['pagina'] ?>" class="listUser"><i class="far fa-trash-alt peque"></i></a>
-                                    <?php }?>
                             <?php } ?>
                         </td>
                     <?php endforeach; ?>

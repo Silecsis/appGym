@@ -35,7 +35,7 @@
 
                                 <li class="nav-item">
                                     <!--Horario-->
-                                    <a class="nav-link waves-effect waves-light navColor" href="index.php?controller=adminTramos&action=listTramos&pagina=1&rxp=10">Horario</a>
+                                    <a class="nav-link waves-effect waves-light navColor" href="index.php?controller=adminTramos&action=listHorario&pagina=1&rxp=10">Horario</a>
                                 </li>
                             </ul>
                         </div>
