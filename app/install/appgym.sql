@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-12-2020 a las 12:39:00
+-- Tiempo de generación: 17-12-2020 a las 03:28:42
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.2.34
 
@@ -111,8 +111,9 @@ CREATE TABLE `tramos` (
 INSERT INTO `tramos` (`id`, `dia`, `hora_inicio`, `hora_fin`, `actividad_id`, `fecha_alta`, `fecha_baja`) VALUES
 (1, 3, '07:15:00', '08:15:00', 2, '2020-12-07', NULL),
 (3, 3, '07:00:00', '08:15:00', 5, '2020-12-07', NULL),
-(5, 1, '07:15:00', '08:15:00', 10, '2020-12-07', NULL),
-(6, 2, '07:15:00', '08:30:00', 4, '2020-12-07', NULL);
+(5, 1, '07:15:00', '08:15:00', 10, '2020-12-05', NULL),
+(8, 1, '07:15:00', '08:00:00', 3, '2020-12-05', NULL),
+(9, 5, '07:15:00', '08:00:00', 4, '2020-12-05', NULL);
 
 -- --------------------------------------------------------
 
@@ -148,7 +149,6 @@ INSERT INTO `usuario` (`id`, `nif`, `nombre`, `apellidos`, `email`, `password`, 
 (47, '29747147M', 'asdd', 'asdd', 'asa33sad@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 0, 'avatar5fd4d7832db867.10570291.png', 2),
 (48, '29747147M', 'asdd', 'asdd', 'a123s333d@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 0, 'avatar5fd4d78ed31115.94284723.png', 2),
 (49, '29747147M', 'asdd', 'asdd', 'asas22ad333@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 0, 'avatar5fd4d8d233cbb9.70696708.png', 2),
-(50, '29747147M', 'asdd', 'asdd', 'as11as22ad@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d7a99a7bb4.76166243.png', 1),
 (51, '29747147M', 'asdd', 'asdd', 'a11sd3@asd.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd4d8685ab723.91289395.png', 1),
 (55, '49086023K', 'MJ', 'Cam Gar', 'silecsis@gmail.com', '0bb440353f368ea6680333e925dad2d9', 34666666666, 'Calle cual', 1, 'avatar5fd6075f86b8e2.36240738.png', 2);
 
@@ -216,7 +216,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `tramos`
 --
 ALTER TABLE `tramos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`

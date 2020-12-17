@@ -56,8 +56,25 @@
                 <ul class="phpdocumentor-list">
                                             <li><a href="namespaces/phpmailer-phpmailer.html"><abbr title="\PHPMailer\PHPMailer">PHPMailer</abbr></a></li>
                                     </ul>
+                            <h4 class="phpdocumentor-sidebar__root-namespace"><a href="namespaces/composer.html"><abbr title="\Composer">Composer</abbr></a></h4>
+                <ul class="phpdocumentor-list">
+                                            <li><a href="namespaces/composer-autoload.html"><abbr title="\Composer\Autoload">Autoload</abbr></a></li>
+                                    </ul>
+                            <h4 class="phpdocumentor-sidebar__root-namespace"><a href="namespaces/spipu.html"><abbr title="\Spipu">Spipu</abbr></a></h4>
+                <ul class="phpdocumentor-list">
+                                            <li><a href="namespaces/spipu-html2pdf.html"><abbr title="\Spipu\Html2Pdf">Html2Pdf</abbr></a></li>
+                                    </ul>
                         </section>
 
+        <section class="phpdocumentor-sidebar__category">
+        <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
+                    <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/Default.html"><abbr title="\Default">Default</abbr></a></h3>
+                                <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/Html2pdf.html"><abbr title="\Html2pdf">Html2pdf</abbr></a></h3>
+                                <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/com.html"><abbr title="\com">com</abbr></a></h3>
+                        <ul class="phpdocumentor-list">
+                                    <li><a href="packages/com-tecnick.html"><abbr title="\com\tecnick">tecnick</abbr></a></li>
+                            </ul>
+                        </section>
     
     <section class="phpdocumentor-sidebar__category">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
@@ -84,6 +101,12 @@
         extends <a href="classes/BaseController.html"><abbr title="\BaseController">BaseController</abbr></a>
     </span>
     
+            <div class="phpdocumentor-element__package">
+            in package
+            <ul class="phpdocumentor-breadcrumbs">
+                                    <li class="phpdocumentor-breadcrumb"><a href="packages/Default.html">Default</a></li>
+                            </ul>
+        </div>
     
     
     </h2>
@@ -91,7 +114,7 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="proyectos/appGym/app/controllers/AdminTramosController.php"><a href="files/proyectos-appgym-app-controllers-admintramoscontroller.html"><abbr title="proyectos/appGym/app/controllers/AdminTramosController.php">AdminTramosController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">20</span>
+    <span class="phpdocumentor-element-found-in__line">21</span>
 </aside>
 
             <p class="phpdocumentor-summary">Clase controlador que será la encargada de obtener, para cada tarea, los datos
@@ -159,6 +182,34 @@ inicializa los mensajes a vacío</dd>
 </dt>
 <dd>Carga la vista indicada si el usuario está logado, sino está logado, redirige al login
 y le indica a qué vista quería entrar.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/AdminTramosController.html#method_createTramos">createTramos()</a>
+    <span>
+                        &nbsp;: void    </span>
+</dt>
+<dd>Crea un nuevo tramo</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/AdminTramosController.html#method_deleteTramos">deleteTramos()</a>
+    <span>
+                        &nbsp;: void    </span>
+</dt>
+<dd>Elimina el tramo de base de datos.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/AdminTramosController.html#method_editTramos">editTramos()</a>
+    <span>
+                        &nbsp;: void    </span>
+</dt>
+<dd>Edita el tramo en la base de datos</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/AdminTramosController.html#method_imprimirHorario">imprimirHorario()</a>
+    <span>
+                        &nbsp;: void    </span>
+</dt>
+<dd>Imprime el horario en pdf. Imprime la vista impriHorarioView.php</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/AdminTramosController.html#method_listHorario">listHorario()</a>
@@ -239,7 +290,7 @@ y le indica a qué vista quería entrar.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="proyectos/appGym/app/controllers/AdminTramosController.php"><a href="files/proyectos-appgym-app-controllers-admintramoscontroller.html"><abbr title="proyectos/appGym/app/controllers/AdminTramosController.php">AdminTramosController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">27</span>
+    <span class="phpdocumentor-element-found-in__line">28</span>
 </aside>
 
     
@@ -269,7 +320,7 @@ y le indica a qué vista quería entrar.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="proyectos/appGym/app/controllers/AdminTramosController.php"><a href="files/proyectos-appgym-app-controllers-admintramoscontroller.html"><abbr title="proyectos/appGym/app/controllers/AdminTramosController.php">AdminTramosController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">24</span>
+    <span class="phpdocumentor-element-found-in__line">25</span>
 </aside>
 
     
@@ -303,7 +354,7 @@ y le indica a qué vista quería entrar.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="proyectos/appGym/app/controllers/AdminTramosController.php"><a href="files/proyectos-appgym-app-controllers-admintramoscontroller.html"><abbr title="proyectos/appGym/app/controllers/AdminTramosController.php">AdminTramosController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">33</span>
+    <span class="phpdocumentor-element-found-in__line">34</span>
 </aside>
 
         <p class="phpdocumentor-summary">Constructor que crea automáticamente un objeto modelo en el controlador e
@@ -464,6 +515,142 @@ y le indica a qué vista quería entrar.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_createTramos">
+        createTramos()
+        <a href="classes/AdminTramosController.html#method_createTramos" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="proyectos/appGym/app/controllers/AdminTramosController.php"><a href="files/proyectos-appgym-app-controllers-admintramoscontroller.html"><abbr title="proyectos/appGym/app/controllers/AdminTramosController.php">AdminTramosController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">223</span>
+</aside>
+
+        <p class="phpdocumentor-summary">Crea un nuevo tramo</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                <span class="phpdocumentor-signature__name">createTramos</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"></section>
+
+    
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">void</span>
+            &mdash;
+            <section class="phpdocumentor-description"></section>
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_deleteTramos">
+        deleteTramos()
+        <a href="classes/AdminTramosController.html#method_deleteTramos" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="proyectos/appGym/app/controllers/AdminTramosController.php"><a href="files/proyectos-appgym-app-controllers-admintramoscontroller.html"><abbr title="proyectos/appGym/app/controllers/AdminTramosController.php">AdminTramosController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">111</span>
+</aside>
+
+        <p class="phpdocumentor-summary">Elimina el tramo de base de datos.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                <span class="phpdocumentor-signature__name">deleteTramos</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"></section>
+
+    
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">void</span>
+            &mdash;
+            <section class="phpdocumentor-description"></section>
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_editTramos">
+        editTramos()
+        <a href="classes/AdminTramosController.html#method_editTramos" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="proyectos/appGym/app/controllers/AdminTramosController.php"><a href="files/proyectos-appgym-app-controllers-admintramoscontroller.html"><abbr title="proyectos/appGym/app/controllers/AdminTramosController.php">AdminTramosController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">153</span>
+</aside>
+
+        <p class="phpdocumentor-summary">Edita el tramo en la base de datos</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                <span class="phpdocumentor-signature__name">editTramos</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"></section>
+
+    
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">void</span>
+            &mdash;
+            <section class="phpdocumentor-description"></section>
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_imprimirHorario">
+        imprimirHorario()
+        <a href="classes/AdminTramosController.html#method_imprimirHorario" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="proyectos/appGym/app/controllers/AdminTramosController.php"><a href="files/proyectos-appgym-app-controllers-admintramoscontroller.html"><abbr title="proyectos/appGym/app/controllers/AdminTramosController.php">AdminTramosController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">348</span>
+</aside>
+
+        <p class="phpdocumentor-summary">Imprime el horario en pdf. Imprime la vista impriHorarioView.php</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                <span class="phpdocumentor-signature__name">imprimirHorario</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"></section>
+
+    
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">void</span>
+            &mdash;
+            <section class="phpdocumentor-description"></section>
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_listHorario">
         listHorario()
         <a href="classes/AdminTramosController.html#method_listHorario" class="headerlink"><i class="fas fa-link"></i></a>
@@ -471,7 +658,7 @@ y le indica a qué vista quería entrar.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="proyectos/appGym/app/controllers/AdminTramosController.php"><a href="files/proyectos-appgym-app-controllers-admintramoscontroller.html"><abbr title="proyectos/appGym/app/controllers/AdminTramosController.php">AdminTramosController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">105</span>
+    <span class="phpdocumentor-element-found-in__line">288</span>
 </aside>
 
         <p class="phpdocumentor-summary">Muestra el horario agrupado por hora de inicio y hora de fin del tramo.</p>
@@ -506,7 +693,7 @@ y le indica a qué vista quería entrar.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="proyectos/appGym/app/controllers/AdminTramosController.php"><a href="files/proyectos-appgym-app-controllers-admintramoscontroller.html"><abbr title="proyectos/appGym/app/controllers/AdminTramosController.php">AdminTramosController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 </aside>
 
         <p class="phpdocumentor-summary">Lista los tramos de la base de datos.</p>
