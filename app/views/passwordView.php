@@ -24,9 +24,6 @@
 
               <div class="alert alert-success" style="margin-top:5px;"> 
                 La nueva contraseña se ha enviado correctamente.
-                <br/> 
-                Para no poner la contraseña del gmail utilizado para enviar las contraseñas olvidadas, se ha utilizado un servicio de email falso
-                cuya url es: <a href="https://ethereal.email/create">https://ethereal.email/create</a>. El usuario y contraseña de este servicio está en la documentación.
               </div>
 
             <?php

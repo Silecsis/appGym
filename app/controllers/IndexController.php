@@ -86,8 +86,7 @@ class IndexController extends BaseController{
                     // Lógica asociada a mantener la sesión mantenerSesion 
                     if(isset($_POST['mantenerSesion'])&&($_POST['mantenerSesion']=="on")) // Si está seleccionado el checkbox...
                     { // Creamos las cookies de la sesion que incluye el nombre de user y su rol.
-
-//-----------------------MODIFICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR.
+                        
                         //(El rol se borrará de las cookies porque pasará a leerse a bd.)
                         setcookie ('mantenerSesion' , 'on',time() + (15 * 24 * 60 * 60)); 
                         setcookie ('mantenerSesion_email' ,  $_SESSION['usuario']["email"],time() + (15 * 24 * 60 * 60));

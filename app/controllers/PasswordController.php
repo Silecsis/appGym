@@ -37,9 +37,6 @@ class PasswordController extends BaseController{
      * NOTA: Para no colocar mi correo y contraseña reales, se ha utilizado un servicio falso de email.
      * Se puede ver si se ha enviado correctamente accediendo a la bandeja de mensajes enviados del enlace 
      *  · https://ethereal.email/create 
-     * 
-     * con el usuario: anissa.jenkins@ethereal.email
-     * y contraseña: uUTxyuGQJuMkpJQGU5.
      *
      * @return void
      */

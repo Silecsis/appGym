@@ -17,11 +17,8 @@
                     
                         <div class="collapse navbar-collapse" id="navbarSupportedContent-333-1">
                             <ul class="navbar-nav nav-flex-icons">
-                                <li class="nav-item">
-                                    <!--Mensajes-->
-                                    <a class="nav-link waves-effect waves-light navColor" href="index.php?controller=home&action=messages">Mensajes</a>
-                                </li>
 
+                                <!--Si es Admin-->
                                 <?php if($_SESSION['usuario']["rol_id"]==1){?>
                                     <li class="nav-item">
                                         <!--Usuarios-->
@@ -32,7 +29,7 @@
                                         <a class="nav-link waves-effect waves-light navColor" href="index.php?controller=adminActivities&action=listActivities&pagina=1&rxp=10">Actividades</a>
                                     </li>
                                     <li class="nav-item">
-                                        <!--Actividades dirigidas-->
+                                        <!--Tramos horarios-->
                                         <a class="nav-link waves-effect waves-light navColor" href="index.php?controller=adminTramos&action=listTramos&pagina=1&rxp=10">Tramos</a>
                                     </li>
                                 <?php }?>

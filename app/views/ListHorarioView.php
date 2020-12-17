@@ -1,4 +1,4 @@
-<!--Vista de "listar horario" desde todos los uduarios.
+<!--Vista de "listar horario" desde todos los usuarios.
         Es la vista que carga los tramos agrupados por hora inicio y hora fin de la BBDD.
         Además, tendrá el campo de búsqueda para mirar en el horario.-->
 

@@ -18,6 +18,11 @@ div.footer{
     height: 40px;
     color: white;
 }
+
+span.pie1{
+    margin-left: 25px;
+    font-size: 10px!important;
+}
 /*-------------------Para que el pie quede debajo del contenido----------------------------*/
 
 header{

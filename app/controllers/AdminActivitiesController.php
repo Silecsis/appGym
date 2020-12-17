@@ -254,7 +254,5 @@ class AdminActivitiesController extends BaseController
         }  
    }
 
-
-
 }
 ?>

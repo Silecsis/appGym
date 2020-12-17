@@ -1,4 +1,4 @@
-<!--Vista de "imprimir horario" desde todos los uduarios. Será la vista de imprimir el horario-->
+<!--Vista de "imprimir horario" desde todos los usuarios. Será la vista de imprimir el horario-->
 
 <!DOCTYPE html>
 <html lang="en">

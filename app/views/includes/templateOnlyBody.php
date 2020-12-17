@@ -1,5 +1,6 @@
 <!--
-Será la plantilla para solo imprimir el cuerpo
+Será la plantilla para solo imprimir el cuerpo.
+Será utilizada para imprimir en pdf las vistas.
 -->
 <!DOCTYPE html>
 <html lang="es">

@@ -1,6 +1,6 @@
 <?php
 /**
- * Para recordar campos.
+ * Clase definida para recordar campos.
  * 
  */
 
@@ -53,7 +53,7 @@
     }
 
     /**
-     * Recuerda el valor selecciona del botón desplegable.
+     * Recuerda el valor seleccionado de un botón desplegable.
      *
      * @param string $valueSelect el valor guardado.
      * @param string $valueOption el valor de la opción

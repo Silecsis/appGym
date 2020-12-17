@@ -90,6 +90,13 @@ function validate() {
     $login = "";
     $aforo=0;
     $descripcion="";
+    $hora_inicio="";
+    $hora_fin="";
+    $fecha_alta="";
+    $fecha_baja="";
+    $hoy = getdate();
+    $dia="";
+    $actividad_id="";
 
 
 
@@ -134,7 +141,7 @@ function validate() {
             if (empty($_POST["passwordMod"])||(!preg_match("/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i", $_POST["passwordMod"]))) {
               $errors["passwordMod"] = "Contraseña no válida.  Asegúrese de que tenga tener una longitud mínima de 8 caracteres y contener letras mayúsculas, minúsculas, números y caracteres especiales.";
             }
-        }else if(isset($_SESSION["usuario"]["rol_id"]) && $_SESSION["usuario"]["rol_id"]==1 && !isset($_GET["id"]) && $_GET["action"]!="createActivities"){
+        }else if(isset($_SESSION["usuario"]["rol_id"]) && $_SESSION["usuario"]["rol_id"]==1 && !isset($_GET["id"]) && $_GET["action"]!="createActivities" && $_GET["action"]!="createTramos"){
             // Si está logueado con el rol de admin, pero en la barra no hay id, no deberá controlar el error de contraseña. 
             if (!isset($_FILES["imagen"]) || $_FILES["imagen"]["error"] != 0) {
               $errors["imagen"] = "Imagen no válida. Asegúrate de no dejar éste campo vacío.";
@@ -190,8 +197,34 @@ function validate() {
           $errors["descripcion"] = "Descripción no válida. Asegúrate de no dejar este campo vacío ni que tenga una longitud mayor a 100 caracteres.";
         }
 
-        if (isset($_POST["descripcion"]) && (empty($_POST["aforo"]) || $_POST["aforo"] < 1 || $_POST["aforo"] > 50)) {
+        if (isset($_POST["aforo"]) && (empty($_POST["aforo"]) || $_POST["aforo"] < 1 || $_POST["aforo"] > 50)) {
           $errors["aforo"] = "Aforo no válido. Asegúrate de no dejar este campo vacío y de que el aforo esté entre 1 y 50.";
+        }
+
+        //Tramos
+        //En las hora valida de 24 horas
+        if (isset($_POST["hora_inicio"]) && (empty($_POST["hora_inicio"]) || !preg_match("/^(?:2[0-3]|[01][0-9]):[0-5][0-9](:[0-5][0-9])*$/", $_POST["hora_inicio"]))) {
+          $errors["hora_inicio"] = "Hora de inicio no válida. Asegúrate de no dejar este campo y que tenga un formato YYYY-MM-DD.";
+        }
+
+        if (isset($_POST["hora_fin"]) && (empty($_POST["hora_fin"]) || !preg_match("/^(?:2[0-3]|[01][0-9]):[0-5][0-9](:[0-5][0-9])*$/", $_POST["hora_fin"]))) {
+          $errors["hora_fin"] = "Hora de fin no válida. Asegúrate de no dejar este campo vacío  y que tenga un formato YYYY-MM-DD.";
+        }
+
+        if (isset($_POST["fecha_alta"]) && (empty($_POST["fecha_alta"]) || !preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $_POST["fecha_alta"]))) {
+          $errors["fecha_alta"] = "Fecha de alta no válida. Asegúrate de no dejar este campo vacío y que tenga un formato HH:MM.";
+        }
+
+        if (isset($_POST["fecha_baja"]) && ($_POST["fecha_baja"] !="" && !preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $_POST["fecha_baja"]))) {
+          $errors["fecha_baja"] = "Fecha de baja no válida. Asegúrate de la fecha de baja no sea menor que la fecha de alta HH:MM.";
+        }
+
+        if (isset($_POST["dia"]) &&  (empty($_POST["dia"]))) {
+          $errors["dia"] = "El día no puede estar vacío.";
+        }
+
+        if (isset($_POST["actividad_id"]) && (empty($_POST["actividad_id"])) ) {
+          $errors["actividad_id"] = "La actividad no puede estar vacío.";
         }
 
     }

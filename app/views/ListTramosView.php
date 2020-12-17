@@ -83,7 +83,7 @@
             </div>
             <?php if($_SESSION["usuario"]["rol_id"]==1){ ?>
                 <div>
-                    <a href="" class="btn btn-nuev " role="button"><i class="fas fa-plus-square fe"> Nuevo tramo</i></a>
+                    <a href="?controller=adminTramos&action=createTramos" class="btn btn-nuev " role="button"><i class="fas fa-plus-square fe"> Nuevo tramo</i></a>
                 </div>
             <?php } ?>
 
@@ -133,8 +133,8 @@
                     <td><?= $t["fecha_alta"] ?></td>
                     <td><?php if($t["fecha_baja"]==null){echo "No hay fecha de baja";}?></td>
                     <td>
-                        <a href="<?= $t['id']."&rxp=".$_GET["rxp"] ?>" class="listUser"><i class="fas fa-edit"></i>Editar </a>
-                        <a href="<?= $t['id']."&rxp=".$_GET["rxp"].$url.'&pagina='.$_GET['pagina'] ?>" class="listUser"><i class="far fa-trash-alt"></i>Eliminar</a>
+                        <a href="?controller=adminTramos&action=editTramos&id=<?= $t['id']."&rxp=".$_GET["rxp"] ?>" class="listUser"><i class="fas fa-edit"></i>Editar </a>
+                        <a href="?controller=adminTramos&action=deleteTramos&id=<?= $t['id']."&rxp=".$_GET["rxp"].$url.'&pagina='.$_GET['pagina'] ?>" class="listUser"><i class="far fa-trash-alt"></i>Eliminar</a>
                     </td>
                 </tr>
             <?php endforeach;} ?>

@@ -83,7 +83,7 @@ class View
     *  Muestra una vista y pasa un array de valores que se van a usar ya que
     * todos los valores de la vista no se van a utilizar. 
     * Este funciona para las páginas que se vayan a imprimir.
-    * Solo coge el bodu del html
+    * Solo coge el body del html
     *
     * @param string $name Nombre de nuestra vista, por ej, Login
     * @param array $vars conjunto de variables que se van a usar en la vista.

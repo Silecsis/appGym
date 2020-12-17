@@ -103,6 +103,180 @@ class AdminTramosController extends BaseController
         
    }
 
+    /**
+    * Elimina el tramo de base de datos.
+    *
+    * @return void
+    */
+    public function deleteTramos()
+    {
+         //Verificamos que hemos recibido los parámetros desde la vista de listUserView, que no podemos eliminarnos a nosotros mismos
+         //y que tengamos el rol de admin (por si nos roban la URL).
+         if (isset($_GET['id']) && (is_numeric($_GET['id'])) && $_SESSION["usuario"]["rol_id"]==1) {
+             $id = $_GET["id"];
+ 
+             //Realizamos la operación de suprimir la actividad con el id.
+             $resultModelo = $this->modelo->deleteTramos($id);
+ 
+             if ($resultModelo["correct"]){
+                 $params=[
+                     "correct"=>true
+                 ];
+             }else{
+                 $params=[
+                     "type"=> "deleteIncorrect"
+                 ];
+                 $this->redirect("error","index",$params);
+             }
+             
+         } else if($_SESSION["usuario"]["rol_id"]!=1){
+             $params=[
+                 "type"=>"noAdmin"
+             ];
+             $this->redirect("error","index",$params);
+ 
+         }else{ //Si no recibimos el valor del parámetro $id generamos el mensaje indicativo:
+             $params=[
+                 "type"=> "unexpected"
+             ];
+             $this->redirect("error","index",$params);
+         }
+         //Realizamos el listado de los usuarios
+         $this->listTramos();
+    }
+
+    /**
+    * Edita el tramo en la base de datos
+    *
+    * @return void
+    */
+   public function editTramos()
+   {
+        $diasModel= new DiasModel();
+        $dias=$diasModel->listDias();
+
+        $actividadesModel= new ActivitiesModel();
+        $actividades=$actividadesModel->getAllActivities();
+
+        require_once 'ValidationFormController.php';
+
+        //Verificamos que hemos recibido los parámetros desde la vista de listactivitiesView 
+        if (isset($_GET['id']) && (is_numeric($_GET['id']))  && $_SESSION["usuario"]["rol_id"]==1) {
+            $id = $_GET["id"];
+
+            if(isset($_POST["submit"])){
+                $errors=validate();
+
+                if(count($errors) != 0){
+                    $params=[
+                        "errors"=>$errors
+                    ];
+                    //Cargamos la vista con los aprámetros de los errores, que serán los mensajes.
+                    $this->authView("editTramos","AdminTramos","index",$params);
+                }else{
+                    //Sino hay errores, modificamos los datos de la actividad en la bd.
+                    $editCorrect=$this->modelo-> editTramos($_POST["dia"],$_POST["hora_inicio"], $_POST["hora_fin"],$_POST["actividad_id"],$_POST["fecha_alta"],$_POST["fecha_baja"], $_GET["id"]);
+                    
+                    $params=[
+                        "id"=>$_GET["id"],
+                        "success"=> true,
+                        "days"=>$dias["data"],
+                        "activities"=>$actividades["data"]
+                    ];
+
+                    $this->redirect("AdminTramos","editTramos",$params);
+                }
+            }else{
+                //Si no se ha pulsado el botón
+                $tramo=$this->modelo->getById($_GET['id']);
+
+                $params=[
+                    "tramo"=>$tramo,
+                    "days"=>$dias["data"],
+                    "activities"=>$actividades["data"]
+                ];
+
+                $this->authView("editTramos","AdminTramos","index",$params);
+            }
+
+        } else if($_SESSION["usuario"]["rol_id"]!=1){
+            $params=[
+                "type"=>"noAdmin"
+            ];
+            $this->redirect("error","index",$params);
+
+        }else{ //Si no recibimos el valor del parámetro $id generamos el mensaje indicativo:
+            $params=[
+                "type"=>"unexpected" //Error que indica que no hemos podido acceder al id.
+            ];
+
+            $this->redirect("error","index",$params);
+        }
+      
+   }
+
+    /**
+    * Crea un nuevo tramo
+    *
+    * @return void
+    */
+    public function createTramos()
+    {
+        $diasModel= new DiasModel();
+        $dias=$diasModel->listDias();
+
+        $actividadesModel= new ActivitiesModel();
+        $actividades=$actividadesModel->getAllActivities();
+        
+         require_once 'ValidationFormController.php';
+         
+         if(isset($_POST["submit"]) && $_SESSION["usuario"]["rol_id"]==1){
+             //Asociamos una variable de error por si no se validan los campos, que aparezcan en esa variable.
+             $errors=validate();
+ 
+             if(count($errors) != 0){
+                 $params=[
+                     "errors"=>$errors,
+                     "days"=>$dias["data"],
+                     "activities"=>$actividades["data"]
+                 ];
+                 //Cargamos la vista con los aprámetros de los errores, que serán los mensajes.
+                 $this->authView("editTramos","AdminTramos","index",$params);
+             }else{
+                 //Sino hay errores, creamos la nueva actividad en la bd.
+                 $createCorrect=$this->modelo-> createTramos($_POST["dia"],$_POST["hora_inicio"], $_POST["hora_fin"],$_POST["actividad_id"],$_POST["fecha_alta"],$_POST["fecha_baja"]);
+ 
+                 if($createCorrect["correct"]){
+                     //Si el registro es correcto, volvemos a mandar a "nuevo usuario" por si quiere crear otro.
+                     $params=[
+                         "message"=>"created",
+                     ];
+ 
+                     $this->redirect("adminTramos", "createTramos",$params);
+                 }else{ 
+                     //Sino, le mandamos a la misma vista.
+                     $params=[
+                         "errors"=>$createCorrect["errors"],
+                     ];
+                     $this->adminView("editTramos","adminTramos","createTramos",$params);
+                 }
+             }
+         }else if(!isset($_POST["submit"]) && $_SESSION["usuario"]["rol_id"]!=1){
+             $params=[
+                 "type"=>"noAdmin"
+             ];
+             $this->redirect("error","index",$params);
+ 
+         }else{
+             $params=[
+                "days"=>$dias["data"],
+                "activities"=>$actividades["data"]
+             ];
+            $this->adminView("editTramos","adminTramos","createTramos",$params);
+         }  
+    }
+
+
 
 //----------------------------------------------------------Horario------------------------------------------
    /**
